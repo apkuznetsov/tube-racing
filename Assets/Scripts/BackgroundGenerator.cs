@@ -3,7 +3,7 @@ using UnityEngine;
 public class BackgroundGenerator : MonoBehaviour
 {
     [SerializeField] private Transform container;
-    [SerializeField] private GameObject prefab;
+    [SerializeField] private GameObject[] prefab;
 
     [SerializeField] private int numInstances;
     [SerializeField] private float radius;
@@ -20,8 +20,9 @@ public class BackgroundGenerator : MonoBehaviour
     {
         for (int i = 0; i < numInstances; i++)
         {
-            var quad = Instantiate(prefab);
-
+            var randomPrefabIndex = UnityEngine.Random.Range(0, prefab.Length);
+            var quad = Instantiate(prefab[randomPrefabIndex]);
+            
             quad.transform.position = container.position + Random.onUnitSphere * radius;
             quad.transform.LookAt(container);
             quad.transform.forward = -quad.transform.forward;
