@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -12,6 +12,9 @@ public class SpaceShip : Destructible
     [SerializeField] private float maxAngularVelocity;
 
     private Rigidbody thisRigidbody;
+    
+    public Vector3 ControlThrust { get; set; }
+    public Vector3 ControlTorque { get; set; }
 
     private void Start()
     {
@@ -25,6 +28,28 @@ public class SpaceShip : Destructible
 
     private void UpdateRigidbody()
     {
-        throw new NotImplementedException();
+        ControlThrust = Vector3.zero;
+        
+        if (Input.GetKey(KeyCode.W))
+        {
+            ControlThrust += Vector3.forward;
+        }
+        
+        if (Input.GetKey(KeyCode.S))
+        {
+            ControlThrust -= Vector3.forward;
+        }
+        
+        if (Input.GetKey(KeyCode.D))
+        {
+            ControlThrust += Vector3.right;
+        }
+        
+        if (Input.GetKey(KeyCode.A))
+        {
+            ControlThrust -= Vector3.right;
+        }
+        
+        thisRigidbody.AddRelativeForce(Time.fixedDeltaTime * thrustForce * ControlThrust, ForceMode.Force);
     }
 }
