@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -11,6 +11,13 @@ public class SpaceShip : Destructible
     [SerializeField] private float maxLinearVelocity;
     [SerializeField] private float maxAngularVelocity;
 
+    private Rigidbody thisRigidbody;
+
+    private void Start()
+    {
+        thisRigidbody = GetComponent<Rigidbody>();
+    }
+    
     private void FixedUpdate()
     {
         UpdateRigidbody();
