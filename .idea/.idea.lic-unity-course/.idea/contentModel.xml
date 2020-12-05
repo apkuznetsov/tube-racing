@@ -11,6 +11,7 @@
           <e p="BackgroundGenerator.cs" t="Include" />
           <e p="Destructible.cs" t="Include" />
           <e p="ImpactEffect.cs" t="Include" />
+          <e p="MouseCameraMovement.cs" t="Include" />
           <e p="Projectile.cs" t="Include" />
           <e p="SpaceShip.cs" t="Include" />
           <e p="ThirdPersonCamera.cs" t="Include" />
