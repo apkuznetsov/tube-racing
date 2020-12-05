@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6794968369628846940}
   - component: {fileID: 6794968369628846929}
   - component: {fileID: 6794968369628846930}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PrefabStarQuad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
