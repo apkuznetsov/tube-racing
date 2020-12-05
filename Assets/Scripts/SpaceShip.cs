@@ -1,18 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public class SpaceShip : MonoBehaviour
+[RequireComponent(typeof(Rigidbody))]
+public class SpaceShip : Destructible
 {
-    // Start is called before the first frame update
-    void Start()
+    [Header("Space ship")]
+    [SerializeField] private float thrustForce;
+    [SerializeField] private float torqueForce;
+
+    [SerializeField] private float maxLinearVelocity;
+    [SerializeField] private float maxAngularVelocity;
+
+    private void FixedUpdate()
     {
-        
+        UpdateRigidbody();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void UpdateRigidbody()
     {
-        
+        throw new NotImplementedException();
     }
 }
