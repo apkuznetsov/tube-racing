@@ -13,8 +13,8 @@ public class SpaceShip : Destructible
 
     private Rigidbody thisRigidbody;
     
-    public Vector3 ControlThrust { get; set; }
-    public Vector3 ControlTorque { get; set; }
+    private Vector3 ControlThrust { get; set; }
+    private Vector3 ControlTorque { get; set; }
 
     private void Start()
     {
@@ -51,5 +51,19 @@ public class SpaceShip : Destructible
         }
         
         thisRigidbody.AddRelativeForce(Time.fixedDeltaTime * thrustForce * ControlThrust, ForceMode.Force);
+
+        ControlTorque = Vector3.zero;
+
+        if (Input.GetKey(KeyCode.Q))
+        {
+            ControlTorque += Vector3.forward;
+        }
+        
+        if (Input.GetKey(KeyCode.E))
+        {
+            ControlTorque -= Vector3.forward;
+        }
+        
+        thisRigidbody.AddRelativeTorque(Time.fixedDeltaTime * torqueForce * ControlTorque, ForceMode.Force);
     }
 }
