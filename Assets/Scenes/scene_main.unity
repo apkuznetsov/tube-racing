@@ -501,7 +501,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   container: {fileID: 1179893107}
-  prefab: {fileID: 6794968369628846941, guid: e82376917a2383048bde6a22554cf5ad, type: 3}
+  prefab:
+  - {fileID: 6794968369628846941, guid: e82376917a2383048bde6a22554cf5ad, type: 3}
+  - {fileID: 6794968369628846941, guid: 71ab90730af4f3841bb4e534fbc8b187, type: 3}
   numInstances: 150
   radius: 1
 --- !u!1 &1220324481
