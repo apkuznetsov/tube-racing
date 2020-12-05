@@ -9,8 +9,8 @@ public class BackgroundGenerator : MonoBehaviour
     [SerializeField] private float radius = 1;
 
     [SerializeField] private int scaling = 1;
-    // scaling
-    // seed
+    
+    [SerializeField] private int seed = 42;
 
     private void Start()
     {
@@ -20,6 +20,7 @@ public class BackgroundGenerator : MonoBehaviour
     private void Generate()
     {
         var scalingVector = new Vector3(scaling, scaling, 1);
+        Random.seed = seed;
         
         for (int i = 0; i < numInstances; i++)
         {
