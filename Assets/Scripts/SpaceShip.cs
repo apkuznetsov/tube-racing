@@ -63,7 +63,35 @@ public class SpaceShip : Destructible
         {
             ControlTorque -= Vector3.forward;
         }
+
+        ControlTorque += NormalizedMousePosition;
         
         thisRigidbody.AddRelativeTorque(Time.fixedDeltaTime * torqueForce * ControlTorque, ForceMode.Force);
+        
+        // angular velocity limit:
+        var omega = thisRigidbody.angularVelocity;
+        omega.x = Mathf.Clamp(omega.x, -maxAngularVelocity, maxAngularVelocity);
+        omega.y = Mathf.Clamp(omega.y, -maxAngularVelocity, maxAngularVelocity);
+        omega.z = Mathf.Clamp(omega.z, -maxAngularVelocity, maxAngularVelocity);
+
+        thisRigidbody.angularVelocity = omega;
+    }
+
+    private Vector3 NormalizedMousePosition
+    {
+        get
+        {
+            Vector3 mousePos = Input.mousePosition;
+            mousePos.z = 0;
+            
+            Vector3 halfScreen = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0.0f);
+
+            mousePos -= halfScreen;
+
+            mousePos.x /= halfScreen.x;
+            mousePos.y /= halfScreen.y;
+            
+            return new Vector3(-mousePos.y, mousePos.x, 0);
+        }
     }
 }
