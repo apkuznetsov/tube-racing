@@ -58,4 +58,8 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-.idea/.idea.lic-unity-course/.idea/workspace.xml
+.idea/.idea.lic-unity-course/
+.idea/.idea.lic-unity-course/.idea/
+
+Assets/ThirdParty.meta
+Assets/ThirdParty/

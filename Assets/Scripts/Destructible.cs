@@ -1,18 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Destructible : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [Header("Destructible")]
+    [SerializeField] private float maxHitPoints;
+
+    private float hitPoints;
+
+    private void Start()
     {
-        
+        hitPoints = maxHitPoints;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ApplyDamage(float damage)
     {
-        
+        hitPoints -= damage;
+
+        if (hitPoints < 0)
+            Explode();
+    }
+
+    protected virtual void Explode()
+    {
+        Destroy(gameObject);
     }
 }

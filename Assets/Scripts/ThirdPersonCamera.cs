@@ -1,18 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+[RequireComponent(typeof(Camera))]
 public class ThirdPersonCamera : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Transform target;
+    [SerializeField] private Transform targetCenter;
 
-    // Update is called once per frame
-    void Update()
+    [SerializeField] private float interpolationLinear;
+    [SerializeField] private float interpolationAngular;
+
+    [SerializeField] private float forwardObserveDistance;
+
+    private void FixedUpdate()
     {
-        
+        var transformPosition = transform.position;
+        transformPosition = Vector3.Lerp(transformPosition, target.position, interpolationLinear * Time.deltaTime);
+
+        var cameraTransform = transform;
+        cameraTransform.position = transformPosition;
+
+        Vector3 fw = targetCenter.position + forwardObserveDistance * targetCenter.forward;
+        transform.rotation = Quaternion.LookRotation(
+            fw - transformPosition,
+            Vector3.Lerp(cameraTransform.up, target.up, interpolationAngular * Time.deltaTime));
     }
 }
