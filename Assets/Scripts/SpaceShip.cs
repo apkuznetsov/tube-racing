@@ -4,11 +4,8 @@
 public class SpaceShip : Destructible
 {
     [Header("Space ship")]
-    [SerializeField] private float thrustForce;
-    [SerializeField] private float torqueForce;
-
-    [SerializeField] private float maxLinearVelocity;
-    [SerializeField] private float maxAngularVelocity;
+    
+    [SerializeField] private SpaceShipParameters parameters;
 
     private Rigidbody thisRigidbody;
     
@@ -49,9 +46,9 @@ public class SpaceShip : Destructible
             ControlThrust -= Vector3.right;
         }
         
-        thisRigidbody.AddRelativeForce(Time.fixedDeltaTime * thrustForce * ControlThrust, ForceMode.Force);
+        thisRigidbody.AddRelativeForce(Time.fixedDeltaTime * parameters.thrustForce * ControlThrust, ForceMode.Force);
 
-        float dragCoeff = thrustForce / maxLinearVelocity;
+        float dragCoeff = parameters.thrustForce / parameters.maxLinearVelocity;
         thisRigidbody.AddForce(-thisRigidbody.velocity * (dragCoeff * Time.fixedDeltaTime), ForceMode.Force);
 
         ControlTorque = Vector3.zero;
@@ -68,13 +65,13 @@ public class SpaceShip : Destructible
 
         ControlTorque += NormalizedMousePosition;
         
-        thisRigidbody.AddRelativeTorque(Time.fixedDeltaTime * torqueForce * ControlTorque, ForceMode.Force);
+        thisRigidbody.AddRelativeTorque(Time.fixedDeltaTime * parameters.torqueForce * ControlTorque, ForceMode.Force);
         
         // angular velocity limit:
         var omega = thisRigidbody.angularVelocity;
-        omega.x = Mathf.Clamp(omega.x, -maxAngularVelocity, maxAngularVelocity);
-        omega.y = Mathf.Clamp(omega.y, -maxAngularVelocity, maxAngularVelocity);
-        omega.z = Mathf.Clamp(omega.z, -maxAngularVelocity, maxAngularVelocity);
+        omega.x = Mathf.Clamp(omega.x, -parameters.maxAngularVelocity, parameters.maxAngularVelocity);
+        omega.y = Mathf.Clamp(omega.y, -parameters.maxAngularVelocity, parameters.maxAngularVelocity);
+        omega.z = Mathf.Clamp(omega.z, -parameters.maxAngularVelocity, parameters.maxAngularVelocity);
 
         thisRigidbody.angularVelocity = omega;
     }
