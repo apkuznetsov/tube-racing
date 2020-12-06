@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class SpaceShip : Destructible
@@ -51,6 +50,9 @@ public class SpaceShip : Destructible
         }
         
         thisRigidbody.AddRelativeForce(Time.fixedDeltaTime * thrustForce * ControlThrust, ForceMode.Force);
+
+        float dragCoeff = thrustForce / maxLinearVelocity;
+        thisRigidbody.AddForce(-thisRigidbody.velocity * (dragCoeff * Time.fixedDeltaTime), ForceMode.Force);
 
         ControlTorque = Vector3.zero;
 
