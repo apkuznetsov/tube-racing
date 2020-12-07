@@ -7,6 +7,8 @@ public class SpaceShip : Destructible
     
     [SerializeField] private SpaceShipParameters parameters;
 
+    [SerializeField] private Turret[] turret;
+    
     private Rigidbody thisRigidbody;
     
     private Vector3 ControlThrust { get; set; }
@@ -20,6 +22,20 @@ public class SpaceShip : Destructible
     private void FixedUpdate()
     {
         UpdateRigidbody();
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButton(1))
+        {
+            FireAllTurrets();
+        }
+    }
+
+    private void FireAllTurrets()
+    {
+        foreach(var t in turret)
+            t.Fire();
     }
 
     private void UpdateRigidbody()
