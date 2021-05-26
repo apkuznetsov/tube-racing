@@ -61,5 +61,6 @@ crashlytics-build.properties
 .idea/.idea.lic-unity-course/
 .idea/.idea.lic-unity-course/.idea/
 
-Assets/ThirdParty.meta
-Assets/ThirdParty/
+*/Library/
+*/Logs/
+*/Temp/
