@@ -64,3 +64,6 @@ crashlytics-build.properties
 */Library/
 */Logs/
 */Temp/
+
+*/.idea/
+*/obj/
