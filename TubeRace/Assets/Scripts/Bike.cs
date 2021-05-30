@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TubeRace
@@ -34,13 +32,28 @@ namespace TubeRace
         /// <summary>
         /// Data model
         /// </summary>
-        [SerializeField] private BikeParameters m_BikeParameters;
+        [SerializeField] private BikeParameters bikeParameters;
 
         /// <summary>
         /// View
         /// </summary>
-        [SerializeField] private BikeViewController m_VisualController;
+        [SerializeField] private BikeViewController visualController;
 
-        private BikeParameters m_EffectiveParameters;
+        [SerializeField] private GameObject prefab;
+        
+        private BikeParameters effectiveParameters;
+
+        private GameObject NewPrefab(GameObject sourcePrefab)
+        {
+            return Instantiate(sourcePrefab);
+        }
+        
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                GameObject newGameObj = NewPrefab(prefab);
+            }
+        }
     }
 }
