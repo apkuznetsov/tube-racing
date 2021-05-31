@@ -46,19 +46,5 @@ namespace TubeRace
 
             Gizmos.DrawLine(start.position, end.position);
         }
-
-        #region Test
-
-        [SerializeField] private float testDistance;
-
-        [SerializeField] private Transform testObject;
-
-        private void OnValidate()
-        {
-            testObject.position = Position(testDistance);
-            testObject.forward = Direction(testDistance);
-        }
-
-        #endregion
     }
 }
