@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TubeRace
@@ -10,45 +7,50 @@ namespace TubeRace
     /// </summary>
     public class TrackLinear : Track
     {
-        [Header("Linear track properties")]
-        [SerializeField] private Transform start;
+        [Header("Linear track properties")] [SerializeField]
+        private Transform start;
+
         [SerializeField] private Transform end;
-        
+
         public override float Length()
         {
-            Vector3 direction = end.position - start.position;
-
-            return direction.magnitude;
+            return (end.position - start.position).magnitude;
         }
 
         public override Vector3 Position(float distance)
         {
-            distance = Mathf.Clamp(distance, 0, Length());
+            float length = Length();
+
+            int coeff = (int) (distance / length);
+            float difference = distance - coeff * length;
+            distance = (distance >= 0)
+                ? difference
+                : difference + length;
+
             Vector3 startPosition = start.position;
-            
             Vector3 direction = end.position - startPosition;
-            direction = direction.normalized;
-            
-            return startPosition + direction * distance;
+
+            return startPosition + direction.normalized * distance;
         }
 
         public override Vector3 Direction(float distance)
         {
             distance = Mathf.Clamp(distance, 0, Length());
-            
+
             return (end.position - start.position).normalized;
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
-            
+
             Gizmos.DrawLine(start.position, end.position);
         }
 
         #region Test
 
         [SerializeField] private float testDistance;
+
         [SerializeField] private Transform testObject;
 
         private void OnValidate()
@@ -60,4 +62,3 @@ namespace TubeRace
         #endregion
     }
 }
-
