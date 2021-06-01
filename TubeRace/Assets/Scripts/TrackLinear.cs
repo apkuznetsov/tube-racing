@@ -23,15 +23,20 @@ namespace TubeRace
             return (end.position - start.position).magnitude;
         }
 
-        public override Vector3 Position(float distance)
+        private float RecalcDistance(float distance)
         {
             float length = Length();
-
             int coeff = (int) (distance / length);
             float difference = distance - coeff * length;
-            distance = (distance >= 0)
+            
+            return distance >= 0
                 ? difference
                 : difference + length;
+        }
+
+        public override Vector3 Position(float distance)
+        {
+            distance = RecalcDistance(distance);
 
             Vector3 startPosition = start.position;
             Vector3 direction = end.position - startPosition;
