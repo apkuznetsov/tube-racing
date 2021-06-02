@@ -38,22 +38,5 @@ namespace TubeRace
         /// View
         /// </summary>
         [SerializeField] private BikeViewController visualController;
-
-        [SerializeField] private GameObject prefab;
-        
-        private BikeParameters effectiveParameters;
-
-        private GameObject NewPrefab(GameObject sourcePrefab)
-        {
-            return Instantiate(sourcePrefab);
-        }
-        
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                GameObject newGameObj = NewPrefab(prefab);
-            }
-        }
     }
 }
