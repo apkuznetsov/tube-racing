@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace TubeRace
 {
-    public class AutoLoopedMovement : MonoBehaviour
+    public class LoopedAutoMovement : MonoBehaviour
     {
         [SerializeField] private Transform start;
 
