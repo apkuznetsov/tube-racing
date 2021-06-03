@@ -19,6 +19,8 @@ namespace TubeRace
 
         [Range(0.0f, 1.0f)] public float linearDrag;
 
+        [Range(0.0f, 1.0f)] public float collisionBounceFactor;
+
         public bool afterburner;
 
         public GameObject engineModel;
@@ -79,7 +81,15 @@ namespace TubeRace
             float currMaxSpeed = bikeParameters.maxSpeed;
             velocity = Mathf.Clamp(velocity, -currMaxSpeed, currMaxSpeed);
 
-            distance += velocity * dt;
+            float ds = velocity * dt;
+            
+            if (Physics.Raycast(transform.position, transform.forward, ds))
+            {
+                velocity = -velocity * bikeParameters.collisionBounceFactor;
+                ds = velocity * dt;
+            }
+
+            distance += ds;
 
             velocity += -velocity * bikeParameters.linearDrag * dt;
 
@@ -93,7 +103,7 @@ namespace TubeRace
 
             Quaternion quater = Quaternion.AngleAxis(rollAngle, Vector3.forward);
             Vector3 trackOffset = quater * (Vector3.up * track.Radius);
-            
+
             transform.position = bikePos - trackOffset;
             transform.rotation = Quaternion.LookRotation(bikeDir, trackOffset);
         }
