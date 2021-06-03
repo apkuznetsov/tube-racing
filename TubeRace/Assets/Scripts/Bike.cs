@@ -18,6 +18,9 @@ namespace TubeRace
         public float agility;
 
         public float maxSpeed;
+
+        [Range(0.0f, 1.0f)] public float linearDrag;
+
         public bool afterburner;
 
         public GameObject engineModel;
@@ -38,6 +41,11 @@ namespace TubeRace
         /// View
         /// </summary>
         [SerializeField] private BikeViewController visualController;
+
+        [SerializeField] private Track track;
+
+        private float distance;
+        private float velocity;
 
         /// <summary>
         /// Управление газом. Нормализованное. От -1 до +1
@@ -63,17 +71,33 @@ namespace TubeRace
             horizontalThrustAxis = val;
         }
 
-        private void MoveBike()
+        private void UpdateBikePhysics()
         {
-            float currForwardVelocity =  forwardThrustAxis * bikeParameters.maxSpeed;
-            Vector3 forwardMoveDelta = transform.forward * (currForwardVelocity * Time.deltaTime);
-            
-            transform.position += forwardMoveDelta;
+            float dt = Time.deltaTime;
+            float dv = dt * forwardThrustAxis * bikeParameters.thrust;
+            velocity += dv;
+
+            float currMaxSpeed = bikeParameters.maxSpeed;
+            velocity = Mathf.Clamp(velocity, -currMaxSpeed, currMaxSpeed);
+
+            distance += velocity * dt;
+
+            velocity += -velocity * bikeParameters.linearDrag * dt;
+
+            if (distance < 0)
+                distance = 0;
+
+            Vector3 bikePos = track.Position(distance);
+            Vector3 bikeDir = track.Direction(distance);
+
+            Transform currTransform = transform;
+            currTransform.position = bikePos;
+            currTransform.forward = bikeDir;
         }
-        
+
         private void Update()
         {
-            MoveBike();
+            UpdateBikePhysics();
         }
     }
 }
