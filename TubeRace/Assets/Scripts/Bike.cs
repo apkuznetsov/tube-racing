@@ -72,17 +72,16 @@ namespace TubeRace
             horizontalThrustAxis = val;
         }
 
-        private void UpdateBikePhysics()
+        private void UpdateBikeSpeed()
         {
             float dt = Time.deltaTime;
-            float dv = dt * forwardThrustAxis * bikeParameters.thrust;
-            velocity += dv;
-
             float currMaxSpeed = bikeParameters.maxSpeed;
+
+            float dv = forwardThrustAxis * bikeParameters.thrust * dt;
+            velocity += dv;
             velocity = Mathf.Clamp(velocity, -currMaxSpeed, currMaxSpeed);
 
             float ds = velocity * dt;
-            
             if (Physics.Raycast(transform.position, transform.forward, ds))
             {
                 velocity = -velocity * bikeParameters.collisionBounceFactor;
@@ -92,12 +91,18 @@ namespace TubeRace
             distance += ds;
 
             velocity += -velocity * bikeParameters.linearDrag * dt;
-
+        }
+        
+        private void UpdateBikePhysics()
+        {
+            UpdateBikeSpeed();
+            
+            float dt = Time.deltaTime;
+            rollAngle += bikeParameters.agility * horizontalThrustAxis * dt;
+            
             if (distance < 0)
                 distance = 0;
-
-            rollAngle += bikeParameters.agility * horizontalThrustAxis * dt;
-
+            
             Vector3 bikePos = track.Position(distance);
             Vector3 bikeDir = track.Direction(distance);
 
