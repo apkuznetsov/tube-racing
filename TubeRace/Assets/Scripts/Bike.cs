@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace TubeRace
@@ -5,17 +6,14 @@ namespace TubeRace
     /// <summary>
     /// Data model
     /// </summary>
-    [System.Serializable]
+    [Serializable]
     public class BikeParameters
     {
-        [Range(0.0f, 10.0f)]
-        public float mass;
+        [Range(0.0f, 10.0f)] public float mass;
 
-        [Range(0.0f, 100.0f)]
-        public float thrust;
+        [Range(0.0f, 100.0f)] public float thrust;
 
-        [Range(0.0f, 100.0f)]
-        public float agility;
+        [Range(0.0f, 100.0f)] public float agility;
 
         public float maxSpeed;
 
@@ -53,6 +51,11 @@ namespace TubeRace
         private float forwardThrustAxis;
 
         /// <summary>
+        /// Управление отклонением влево и вправо. Нормализованное. От -1 до +1
+        /// </summary>
+        private float horizontalThrustAxis;
+
+        /// <summary>
         /// Установка значения педали газа
         /// </summary>
         /// <param name="val"></param>
@@ -61,11 +64,6 @@ namespace TubeRace
             forwardThrustAxis = val;
         }
 
-        /// <summary>
-        /// Управление отклонением влево и вправо. Нормализованное. От -1 до +1
-        /// </summary>
-        private float horizontalThrustAxis;
-        
         public void SetHorizontalThrustAxis(float val)
         {
             horizontalThrustAxis = val;
