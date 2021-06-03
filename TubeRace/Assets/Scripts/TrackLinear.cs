@@ -12,12 +12,6 @@ namespace TubeRace
 
         [SerializeField] private Transform end;
 
-        [SerializeField] private Transform bike;
-
-        [SerializeField] private float bikeSpeed;
-
-        private float bikeDistance;
-
         public override float Length()
         {
             return (end.position - start.position).magnitude;
@@ -33,7 +27,7 @@ namespace TubeRace
 
         public override Vector3 Direction(float distance)
         {
-            distance = Mathf.Clamp(distance, 0, Length());
+            Mathf.Clamp(distance, 0, Length());
 
             return (end.position - start.position).normalized;
         }
@@ -43,13 +37,6 @@ namespace TubeRace
             Gizmos.color = Color.green;
 
             Gizmos.DrawLine(start.position, end.position);
-        }
-
-        private void Update()
-        {
-            bikeDistance += bikeSpeed;
-            bike.position = Position(bikeDistance);
-            bike.forward = Direction(bikeDistance);
         }
     }
 }
