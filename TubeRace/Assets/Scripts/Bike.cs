@@ -44,6 +44,7 @@ namespace TubeRace
 
         private float distance;
         private float velocity;
+        private float rollAngle;
 
         /// <summary>
         /// Управление газом. Нормализованное. От -1 до +1
@@ -85,12 +86,16 @@ namespace TubeRace
             if (distance < 0)
                 distance = 0;
 
+            rollAngle += bikeParameters.agility * horizontalThrustAxis * dt;
+
             Vector3 bikePos = track.Position(distance);
             Vector3 bikeDir = track.Direction(distance);
 
-            Transform currTransform = transform;
-            currTransform.position = bikePos;
-            currTransform.forward = bikeDir;
+            Quaternion quater = Quaternion.AngleAxis(rollAngle, Vector3.forward);
+            Vector3 trackOffset = quater * (Vector3.up * track.Radius);
+            
+            transform.position = bikePos - trackOffset;
+            transform.rotation = Quaternion.LookRotation(bikeDir, trackOffset);
         }
 
         private void Update()
