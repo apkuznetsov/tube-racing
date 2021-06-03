@@ -690,11 +690,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a774cbdd38fc9944b99250c204628ec1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 0
+  radius: 2
   start: {fileID: 505585190}
   end: {fileID: 291972244}
-  bike: {fileID: 1432613114}
-  bikeSpeed: 0.15
 --- !u!4 &497038393
 Transform:
   m_ObjectHideFlags: 0
@@ -1411,6 +1409,53 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1140493030}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1182573208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1182573210}
+  - component: {fileID: 1182573209}
+  m_Layer: 0
+  m_Name: LoopedTrackLinear
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1182573209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182573208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9914aea569e54f8dbdb1cbee930aa65a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  start: {fileID: 505585190}
+  end: {fileID: 291972244}
+  bike: {fileID: 1432613114}
+  bikeSpeed: 5
+--- !u!4 &1182573210
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182573208}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1216061585
 GameObject:
   m_ObjectHideFlags: 0
@@ -1859,7 +1904,7 @@ GameObject:
   - component: {fileID: 1432613112}
   - component: {fileID: 1432613111}
   m_Layer: 0
-  m_Name: BikeLooped
+  m_Name: LoopedBike
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2258,13 +2303,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bikeParameters:
     mass: 1
-    thrust: 1
-    agility: 1
-    maxSpeed: 19.21
+    thrust: 100
+    agility: 43
+    maxSpeed: 163.51
+    linearDrag: 0.36
     afterburner: 0
     engineModel: {fileID: 0}
     hullModel: {fileID: 0}
   visualController: {fileID: 0}
+  track: {fileID: 497038392}
 --- !u!4 &1836277791
 Transform:
   m_ObjectHideFlags: 0
@@ -2273,7 +2320,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1836277789}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 963194228}
