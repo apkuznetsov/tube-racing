@@ -18,8 +18,10 @@ namespace TubeRace
         public float maxSpeed;
 
         [Range(0.0f, 1.0f)] public float linearDrag;
+        [Range(0.0f, 1.0f)] public float angleDrag;
 
-        [Range(0.0f, 1.0f)] public float collisionBounceFactor;
+        [Range(0.0f, 1.0f)] public float linearBounceFactor;
+        [Range(0.0f, 1.0f)] public float angleBounceFactor;
 
         public bool afterburner;
 
@@ -77,14 +79,13 @@ namespace TubeRace
             float dt = Time.deltaTime;
             float currMaxSpeed = bikeParameters.maxSpeed;
 
-            float dv = forwardThrustAxis * bikeParameters.thrust * dt;
-            velocity += dv;
+            velocity += forwardThrustAxis * bikeParameters.thrust * dt;
             velocity = Mathf.Clamp(velocity, -currMaxSpeed, currMaxSpeed);
 
             float ds = velocity * dt;
             if (Physics.Raycast(transform.position, transform.forward, ds))
             {
-                velocity = -velocity * bikeParameters.collisionBounceFactor;
+                velocity = -velocity * bikeParameters.linearBounceFactor;
                 ds = velocity * dt;
             }
 
@@ -92,17 +93,34 @@ namespace TubeRace
 
             velocity += -velocity * bikeParameters.linearDrag * dt;
         }
-        
+
+        private void UpdateBikeRollAngle()
+        {
+            float dt = Time.deltaTime;
+            rollAngle += horizontalThrustAxis * bikeParameters.agility * dt;
+            if (rollAngle > 180.0f)
+                rollAngle -= 360.0f;
+            else if (rollAngle < -180.0f)
+                rollAngle = 360.0f + rollAngle;
+
+            float ds = rollAngle * dt;
+            if (Physics.Raycast(transform.position, transform.right, ds))
+                rollAngle -= bikeParameters.angleBounceFactor;
+            else if (Physics.Raycast(transform.position, -transform.right, ds))
+                rollAngle += bikeParameters.angleBounceFactor;
+
+            if (horizontalThrustAxis == 0)
+                rollAngle += -rollAngle * bikeParameters.angleDrag * dt;
+        }
+
         private void UpdateBikePhysics()
         {
             UpdateBikeSpeed();
-            
-            float dt = Time.deltaTime;
-            rollAngle += bikeParameters.agility * horizontalThrustAxis * dt;
-            
+            UpdateBikeRollAngle();
+
             if (distance < 0)
                 distance = 0;
-            
+
             Vector3 bikePos = track.Position(distance);
             Vector3 bikeDir = track.Direction(distance);
 
