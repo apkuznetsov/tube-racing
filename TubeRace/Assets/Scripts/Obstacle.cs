@@ -5,20 +5,24 @@ namespace TubeRace
     public class Obstacle : MonoBehaviour
     {
         [SerializeField] private Track track;
-        [SerializeField] private float rollAngle;
         [SerializeField] private float distance;
+        [SerializeField] private float rollAngle;
+        [Range(0.0f, 100.0f)] public float agility;
 
         [Range(0.0f, 20.0f)] [SerializeField] private float radiusModifier = 1.0f;
 
+        private Vector3 obstacleDir;
+        private Vector3 trackPosition;
+
+        private Quaternion quater;
+        private Vector3 trackOffset;
+
         private void SetObstaclePoistion()
         {
-            Vector3 obstaclePos = track.Position(distance);
-            Vector3 obstacleDir = track.Direction(distance);
+            quater = Quaternion.AngleAxis(rollAngle, Vector3.forward);
+            trackOffset = quater * (Vector3.up * (radiusModifier * track.Radius));
 
-            Quaternion quater = Quaternion.AngleAxis(rollAngle, Vector3.forward);
-            Vector3 trackOffset = quater * (Vector3.up * (radiusModifier * track.Radius));
-
-            transform.position = obstaclePos - trackOffset;
+            transform.position = trackPosition - trackOffset;
             transform.rotation = Quaternion.LookRotation(obstacleDir, trackOffset);
         }
 
@@ -31,6 +35,19 @@ namespace TubeRace
 
         private void OnValidate()
         {
+            obstacleDir = track.Direction(distance);
+            trackPosition = track.Position(distance);
+            SetObstaclePoistion();
+        }
+
+        private void Update()
+        {
+            rollAngle += agility * Time.deltaTime;
+            if (rollAngle > 180.0f)
+                rollAngle -= 360.0f;
+            else if (rollAngle < -180.0f)
+                rollAngle = 360.0f + rollAngle;
+
             SetObstaclePoistion();
         }
     }
