@@ -114,6 +114,11 @@ namespace TubeRace
             horizontalThrustAxis = val;
         }
 
+        public void CoolAfterburner()
+        {
+            afterburnerHeat = 0;
+        }
+
         private void UpdateAfterburnerHeat()
         {
             afterburnerHeat -= bikeParameters.afterburnerCoolSpeed * Time.deltaTime;

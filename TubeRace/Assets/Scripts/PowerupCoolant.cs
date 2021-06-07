@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TubeRace
@@ -8,7 +6,8 @@ namespace TubeRace
     {
         public override void OnPicked(Bike bike)
         {
-
+            bike.CoolAfterburner();
+            Debug.Log("PowerupCoolant picked up by " + bike.name);
         }
     }
 }
