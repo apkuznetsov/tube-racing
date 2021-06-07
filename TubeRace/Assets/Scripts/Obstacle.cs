@@ -17,7 +17,7 @@ namespace TubeRace
         private Quaternion quater;
         private Vector3 trackOffset;
 
-        private void SetObstaclePoistion()
+        private void SetPosition()
         {
             quater = Quaternion.AngleAxis(rollAngle, Vector3.forward);
             trackOffset = quater * (Vector3.up * (radiusModifier * track.Radius));
@@ -37,7 +37,7 @@ namespace TubeRace
         {
             obstacleDir = track.Direction(distance);
             trackPosition = track.Position(distance);
-            SetObstaclePoistion();
+            SetPosition();
         }
 
         private void Update()
@@ -48,7 +48,7 @@ namespace TubeRace
             else if (rollAngle < -180.0f)
                 rollAngle = 360.0f + rollAngle;
 
-            SetObstaclePoistion();
+            SetPosition();
         }
     }
 }
