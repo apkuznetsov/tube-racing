@@ -6,7 +6,7 @@ namespace TubeRace
 {
     public class PowerupCoolant : Powerup
     {
-        public override void OnPickedByPlayer()
+        public override void OnPicked(Bike bike)
         {
 
         }

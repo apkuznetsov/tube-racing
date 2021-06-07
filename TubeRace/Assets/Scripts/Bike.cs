@@ -40,6 +40,15 @@ namespace TubeRace
     /// </summary>
     public class Bike : MonoBehaviour
     {
+        public static readonly string Tag = "Bike";
+
+        public static GameObject[] GameObjects;
+
+        private void Start()
+        {
+            GameObjects = GameObject.FindGameObjectsWithTag(Tag);
+        }
+
         /// <summary>
         /// Data model
         /// </summary>
@@ -66,9 +75,13 @@ namespace TubeRace
         private float velocity;
         private float rollAngle;
 
+        private float prevDistance;
+
         public float Distance => distance;
         public float Velocity => velocity;
         public float RollAngle => rollAngle;
+
+        public float PrevDistance => prevDistance;
 
         public Track Track => track;
 
@@ -136,6 +149,7 @@ namespace TubeRace
                 ds = velocity * dt;
             }
 
+            prevDistance = distance;
             distance += ds;
         }
 
