@@ -50,6 +50,12 @@ namespace TubeRace
         private float velocity;
         private float rollAngle;
 
+        public float Distance => distance;
+        public float Velocity => velocity;
+        public float RollAngle => rollAngle;
+
+        public Track Track => track;
+
         /// <summary>
         /// Управление газом. Нормализованное. От -1 до +1
         /// </summary>
