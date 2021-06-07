@@ -13,12 +13,16 @@ namespace TubeRace
 
         [Range(0.0f, 100.0f)] public float thrust;
 
-        public float afterburnerThrust;
+        public float maxSpeed;
 
         [Range(0.0f, 100.0f)] public float agility;
 
-        public float maxSpeed;
+        public float afterburnerThrust;
         public float afterburnerMaxSpeedBonus;
+
+        public float afterburnerCoolSpeed;
+        public float afterburnerHeatGeneration;
+        public float afterburnerMaxHeat;
 
         [Range(0.0f, 1.0f)] public float angleDrag;
 
@@ -47,6 +51,16 @@ namespace TubeRace
         [SerializeField] private BikeViewController visualController;
 
         [SerializeField] private Track track;
+
+        private float afterburnerHeat;
+
+        public float NormalizedHeat()
+        {
+            if (bikeParameters.afterburnerMaxHeat > 0)
+                return afterburnerHeat / bikeParameters.afterburnerMaxHeat;
+
+            return 0.0f;
+        }
 
         private float distance;
         private float velocity;
@@ -85,6 +99,16 @@ namespace TubeRace
         public void SetHorizontalThrustAxis(float val)
         {
             horizontalThrustAxis = val;
+        }
+
+        private void UpdateAfterburnerHeat()
+        {
+            afterburnerHeat -= bikeParameters.afterburnerCoolSpeed * Time.deltaTime;
+            if (afterburnerHeat < 0)
+                afterburnerHeat = 0;
+
+            if (EnableAfterburner)
+                afterburnerHeat += bikeParameters.afterburnerHeatGeneration * Time.deltaTime;
         }
 
         private void UpdateBikeSpeed()
@@ -154,6 +178,7 @@ namespace TubeRace
 
         private void Update()
         {
+            UpdateAfterburnerHeat();
             UpdateBikePhysics();
         }
     }
