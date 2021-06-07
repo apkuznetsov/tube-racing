@@ -13,11 +13,13 @@ namespace TubeRace
 
         [Range(0.0f, 100.0f)] public float thrust;
 
+        public float afterburnerThrust;
+
         [Range(0.0f, 100.0f)] public float agility;
 
         public float maxSpeed;
+        public float afterburnerMaxSpeedBonus;
 
-        [Range(0.0f, 1.0f)] public float linearDrag;
         [Range(0.0f, 1.0f)] public float angleDrag;
 
         [Range(0.0f, 1.0f)] public float linearBounceFactor;
@@ -57,6 +59,11 @@ namespace TubeRace
         public Track Track => track;
 
         /// <summary>
+        /// Вкл/выкл доп. ускорителя
+        /// </summary>
+        public bool EnableAfterburner { get; set; }
+
+        /// <summary>
         /// Управление газом. Нормализованное. От -1 до +1
         /// </summary>
         private float forwardThrustAxis;
@@ -85,8 +92,18 @@ namespace TubeRace
             float dt = Time.deltaTime;
             float currMaxSpeed = bikeParameters.maxSpeed;
 
-            velocity += forwardThrustAxis * bikeParameters.thrust * dt;
-            velocity = Mathf.Clamp(velocity, -currMaxSpeed, currMaxSpeed);
+            float forceThrustMax = bikeParameters.thrust;
+            float maxSpeed = bikeParameters.maxSpeed;
+            float force = forwardThrustAxis * bikeParameters.thrust;
+            if (EnableAfterburner)
+            {
+                force += bikeParameters.afterburnerThrust;
+                maxSpeed += bikeParameters.afterburnerMaxSpeedBonus;
+                forceThrustMax += bikeParameters.afterburnerThrust;
+            }
+
+            force += -velocity * (forceThrustMax / maxSpeed);
+            velocity += force * dt;
 
             float ds = velocity * dt;
             if (Physics.Raycast(transform.position, transform.forward, ds))
@@ -96,8 +113,6 @@ namespace TubeRace
             }
 
             distance += ds;
-
-            velocity += -velocity * bikeParameters.linearDrag * dt;
         }
 
         private void UpdateBikeRollAngle()

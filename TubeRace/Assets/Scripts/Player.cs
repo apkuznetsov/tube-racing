@@ -38,6 +38,8 @@ namespace TubeRace
             {
                 activeBike.SetHorizontalThrustAxis(1);
             }
+
+            activeBike.EnableAfterburner = Input.GetKey(KeyCode.Space);
         }
         
         private void Update()
