@@ -13,11 +13,17 @@ namespace TubeRace
 
         [Range(0.0f, 100.0f)] public float thrust;
 
-        [Range(0.0f, 100.0f)] public float agility;
-
         public float maxSpeed;
 
-        [Range(0.0f, 1.0f)] public float linearDrag;
+        [Range(0.0f, 100.0f)] public float agility;
+
+        public float afterburnerThrust;
+        public float afterburnerMaxSpeedBonus;
+
+        public float afterburnerCoolSpeed;
+        public float afterburnerHeatGeneration;
+        public float afterburnerMaxHeat;
+
         [Range(0.0f, 1.0f)] public float angleDrag;
 
         [Range(0.0f, 1.0f)] public float linearBounceFactor;
@@ -34,6 +40,15 @@ namespace TubeRace
     /// </summary>
     public class Bike : MonoBehaviour
     {
+        public static readonly string Tag = "Bike";
+
+        public static GameObject[] GameObjects;
+
+        private void Start()
+        {
+            GameObjects = GameObject.FindGameObjectsWithTag(Tag);
+        }
+
         /// <summary>
         /// Data model
         /// </summary>
@@ -46,9 +61,54 @@ namespace TubeRace
 
         [SerializeField] private Track track;
 
+        private float afterburnerHeat;
+        private float fuel;
+
+        public float NormalizedHeat()
+        {
+            if (bikeParameters.afterburnerMaxHeat > 0)
+                return afterburnerHeat / bikeParameters.afterburnerMaxHeat;
+
+            return 0.0f;
+        }
+
         private float distance;
         private float velocity;
         private float rollAngle;
+
+        private float prevDistance;
+
+        public float Fuel => fuel;
+
+        public float Distance => distance;
+        public float Velocity => velocity;
+        public float RollAngle => rollAngle;
+
+        public float PrevDistance => prevDistance;
+
+        public Track Track => track;
+
+        public void AddFuel(float amount)
+        {
+            fuel += amount;
+
+            fuel = Mathf.Clamp(fuel, 0 , 100);
+        }
+        
+        private bool CanConsumeFuelForAfterburner(float amount)
+        {
+            if (fuel < amount)
+                return false;
+
+            fuel -= amount;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Вкл/выкл доп. ускорителя
+        /// </summary>
+        public bool EnableAfterburner { get; set; }
 
         /// <summary>
         /// Управление газом. Нормализованное. От -1 до +1
@@ -74,13 +134,38 @@ namespace TubeRace
             horizontalThrustAxis = val;
         }
 
+        public void CoolAfterburner()
+        {
+            afterburnerHeat = 0;
+        }
+
+        private void UpdateAfterburnerHeat()
+        {
+            afterburnerHeat -= bikeParameters.afterburnerCoolSpeed * Time.deltaTime;
+            if (afterburnerHeat < 0)
+                afterburnerHeat = 0;
+        }
+
         private void UpdateBikeSpeed()
         {
             float dt = Time.deltaTime;
             float currMaxSpeed = bikeParameters.maxSpeed;
 
-            velocity += forwardThrustAxis * bikeParameters.thrust * dt;
-            velocity = Mathf.Clamp(velocity, -currMaxSpeed, currMaxSpeed);
+            float forceThrustMax = bikeParameters.thrust;
+            float maxSpeed = bikeParameters.maxSpeed;
+            float force = forwardThrustAxis * bikeParameters.thrust;
+            if (EnableAfterburner
+                && CanConsumeFuelForAfterburner(1.0f * Time.deltaTime))
+            {
+                afterburnerHeat += bikeParameters.afterburnerHeatGeneration * Time.deltaTime;
+                
+                force += bikeParameters.afterburnerThrust;
+                maxSpeed += bikeParameters.afterburnerMaxSpeedBonus;
+                forceThrustMax += bikeParameters.afterburnerThrust;
+            }
+
+            force += -velocity * (forceThrustMax / maxSpeed);
+            velocity += force * dt;
 
             float ds = velocity * dt;
             if (Physics.Raycast(transform.position, transform.forward, ds))
@@ -89,9 +174,8 @@ namespace TubeRace
                 ds = velocity * dt;
             }
 
+            prevDistance = distance;
             distance += ds;
-
-            velocity += -velocity * bikeParameters.linearDrag * dt;
         }
 
         private void UpdateBikeRollAngle()
@@ -133,6 +217,7 @@ namespace TubeRace
 
         private void Update()
         {
+            UpdateAfterburnerHeat();
             UpdateBikePhysics();
         }
     }

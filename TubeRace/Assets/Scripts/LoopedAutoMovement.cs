@@ -50,7 +50,7 @@ namespace TubeRace
 
         private void Update()
         {
-            bikeDistance += bikeSpeed;
+            bikeDistance += bikeSpeed * Time.deltaTime;
             LoopBikePosition();
         }
     }

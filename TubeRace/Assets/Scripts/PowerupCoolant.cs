@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TubeRace
 {
     public class PowerupCoolant : Powerup
     {
-        public override void OnPickedByPlayer()
+        public override void OnPicked(Bike bike)
         {
-
+            bike.CoolAfterburner();
+            Debug.Log("PowerupCoolant picked up by " + bike.name);
         }
     }
 }

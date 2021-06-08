@@ -1,14 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TubeRace
 {
     public class PowerupFuel : Powerup
     {
-        public override void OnPickedByPlayer()
+        [Range(0.0f, 100.0f)]
+        [SerializeField] private float fuelAmount;
+        
+        public override void OnPicked(Bike bike)
         {
-            
+            bike.AddFuel(fuelAmount);
         }
     }
 }
