@@ -11,6 +11,7 @@ namespace TubeRace.UserInterface
         [SerializeField] private Text labelLapNumber;
 
         [SerializeField] private Text labelHeat;
+        [SerializeField] private Text labelFuel;
 
         [SerializeField] private Bike bike;
 
@@ -24,6 +25,7 @@ namespace TubeRace.UserInterface
             labelLapNumber.text = "Lap: " + laps;
 
             labelHeat.text = "Heat: " + (int) (bike.NormalizedHeat() * 100.0f);
+            labelHeat.text = "Fuel: " + (int) bike.Fuel;
         }
     }
 }

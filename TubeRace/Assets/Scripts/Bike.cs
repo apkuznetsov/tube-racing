@@ -62,6 +62,7 @@ namespace TubeRace
         [SerializeField] private Track track;
 
         private float afterburnerHeat;
+        private float fuel;
 
         public float NormalizedHeat()
         {
@@ -77,6 +78,8 @@ namespace TubeRace
 
         private float prevDistance;
 
+        public float Fuel => fuel;
+
         public float Distance => distance;
         public float Velocity => velocity;
         public float RollAngle => rollAngle;
@@ -84,6 +87,23 @@ namespace TubeRace
         public float PrevDistance => prevDistance;
 
         public Track Track => track;
+
+        public void AddFuel(float amount)
+        {
+            fuel += amount;
+
+            fuel = Mathf.Clamp(fuel, 0 , 100);
+        }
+        
+        private bool CanConsumeFuelForAfterburner(float amount)
+        {
+            if (fuel < amount)
+                return false;
+
+            fuel -= amount;
+
+            return false;
+        }
 
         /// <summary>
         /// Вкл/выкл доп. ускорителя
@@ -124,9 +144,6 @@ namespace TubeRace
             afterburnerHeat -= bikeParameters.afterburnerCoolSpeed * Time.deltaTime;
             if (afterburnerHeat < 0)
                 afterburnerHeat = 0;
-
-            if (EnableAfterburner)
-                afterburnerHeat += bikeParameters.afterburnerHeatGeneration * Time.deltaTime;
         }
 
         private void UpdateBikeSpeed()
@@ -137,8 +154,11 @@ namespace TubeRace
             float forceThrustMax = bikeParameters.thrust;
             float maxSpeed = bikeParameters.maxSpeed;
             float force = forwardThrustAxis * bikeParameters.thrust;
-            if (EnableAfterburner)
+            if (EnableAfterburner
+                && CanConsumeFuelForAfterburner(1.0f * Time.deltaTime))
             {
+                afterburnerHeat += bikeParameters.afterburnerHeatGeneration * Time.deltaTime;
+                
                 force += bikeParameters.afterburnerThrust;
                 maxSpeed += bikeParameters.afterburnerMaxSpeedBonus;
                 forceThrustMax += bikeParameters.afterburnerThrust;
