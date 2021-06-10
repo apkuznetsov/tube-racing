@@ -4,21 +4,18 @@ namespace TubeRace
 {
     public class LoopedAutoMovement : MonoBehaviour
     {
-        [SerializeField] private Transform start;
+        private const float LoopDistance = 15.0f;
 
+        [SerializeField] private Transform start;
         [SerializeField] private Transform end;
 
-        private float length;
-
-        private Vector3 direction;
-
         [SerializeField] private Transform bike;
-
         [SerializeField] private float bikeSpeed;
 
-        private float bikeDistance;
+        private float length;
+        private Vector3 direction;
 
-        private const float LoopDistance = 15.0f;
+        private float bikeDistance;
 
         private void LoopBikePosition()
         {
