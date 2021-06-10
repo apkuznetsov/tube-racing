@@ -6,7 +6,7 @@ namespace TubeRace
 {
     public class BikeViewController : MonoBehaviour
     {
-        public void SetupBikeView(BikeParameters parameters)
+        public void SetupBikeView(BikeParametersInitial parameters)
         {
 
         }
