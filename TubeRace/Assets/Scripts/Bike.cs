@@ -11,7 +11,9 @@ namespace TubeRace
     {
         [Range(0.0f, 10.0f)] public float mass;
 
-        public float maxSpeed;
+        [Range(100.0f, 1000.0f)] public float maxSpeed;
+
+        [Range(100.0f, 1000.0f)] public float maxAngularSpeed;
 
         [Range(0.0f, 100.0f)] public float thrust;
         [Range(0.0f, 100.0f)] public float agility;
@@ -188,6 +190,8 @@ namespace TubeRace
                 Angle += 360.0f;
 
             angularVelocity += -angularVelocity * bikeParameters.angleDrag * dt;
+            angularVelocity = Mathf.Clamp(angularVelocity,
+                -bikeParameters.maxAngularSpeed, bikeParameters.maxAngularSpeed);
         }
 
         private void UpdateBikePhysics()
