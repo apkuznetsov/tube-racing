@@ -185,12 +185,6 @@ namespace TubeRace
             angularVelocity += horizontalThrustAxis * bikeParameters.agility;
             Angle += angularVelocity * dt;
 
-            // float ds = RollAngle * dt;
-            // if (Physics.Raycast(transform.position, transform.right, ds))
-            //     RollAngle -= bikeParameters.angleBounceFactor;
-            // else if (Physics.Raycast(transform.position, -transform.right, ds))
-            //     RollAngle += bikeParameters.angleBounceFactor;
-
             if (Angle > 180.0f)
                 Angle -= 360.0f;
             else if (Angle < -180.0f)
