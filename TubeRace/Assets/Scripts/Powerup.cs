@@ -5,13 +5,11 @@ namespace TubeRace
     public abstract class Powerup : MonoBehaviour
     {
         [SerializeField] private Track track;
+
         [SerializeField] private float distance;
         [SerializeField] private float rollAngle;
 
-        private void OnValidate()
-        {
-            SetPosition();
-        }
+        protected abstract void OnPicked(Bike bike);
 
         private void SetPosition()
         {
@@ -25,8 +23,6 @@ namespace TubeRace
             transform.rotation = Quaternion.LookRotation(obstacleDir, trackOffset);
         }
 
-        public abstract void OnPicked(Bike bike);
-
         private void UpdateBikes()
         {
             foreach (GameObject bikeGo in Bike.GameObjects)
@@ -39,10 +35,14 @@ namespace TubeRace
                 if (prev < distance && curr > distance)
                 {
                     // limit angles
-
                     OnPicked(bike);
                 }
             }
+        }
+
+        private void OnValidate()
+        {
+            SetPosition();
         }
 
         private void Update()
