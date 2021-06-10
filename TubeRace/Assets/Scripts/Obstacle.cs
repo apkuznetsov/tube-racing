@@ -5,11 +5,12 @@ namespace TubeRace
     public class Obstacle : MonoBehaviour
     {
         [SerializeField] private Track track;
-        [SerializeField] private float distance;
-        [SerializeField] private float rollAngle;
-        [Range(0.0f, 100.0f)] public float agility;
 
+        [SerializeField] private float distance;
         [Range(0.0f, 20.0f)] [SerializeField] private float radiusModifier = 1.0f;
+        [SerializeField] private float rollAngle;
+
+        [Range(0.0f, 100.0f)] public float agility;
 
         private Vector3 obstacleDir;
         private Vector3 trackPosition;
