@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TubeRace
@@ -12,9 +10,8 @@ namespace TubeRace
         /// <summary>
         /// Радиус трубы
         /// </summary>
-        [Header("Base track properties")]
-        [SerializeField] private float radius;
-
+        [Header("Base track properties")] [SerializeField]
+        private float radius;
         public float Radius => radius;
 
         /// <summary>
@@ -39,4 +36,3 @@ namespace TubeRace
         public abstract Vector3 Direction(float distance);
     }
 }
-
