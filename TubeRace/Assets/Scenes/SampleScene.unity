@@ -3763,9 +3763,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   track: {fileID: 497038392}
   distance: 95.8
+  radiusModifier: 0.9
   rollAngle: 1267
   agility: -26
-  radiusModifier: 0.9
 --- !u!65 &876255115
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3876,9 +3876,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   track: {fileID: 497038392}
   distance: 148.5
+  radiusModifier: 0.7
   rollAngle: -134.5
   agility: 26
-  radiusModifier: 0.7
 --- !u!65 &878881634
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4485,8 +4485,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelSpeed: {fileID: 1655586279}
   labelDistance: {fileID: 1084597508}
-  labelRollAngle: {fileID: 1844623893}
   labelLapNumber: {fileID: 907459399}
+  labelRollAngle: {fileID: 1844623893}
   labelHeat: {fileID: 906135109}
   labelFuel: {fileID: 517413551}
   bike: {fileID: 1836277790}
@@ -7165,18 +7165,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bikeParameters:
     mass: 1
-    thrust: 100
     maxSpeed: 100
-    agility: 93.3
+    maxAngularSpeed: 200
+    thrust: 41.38
+    agility: 1
+    angleDrag: 1
+    linearBounceFactor: 1
+    angleBounceFactor: 1
     afterburnerThrust: 500
     afterburnerMaxSpeedBonus: 300
     afterburnerCoolSpeed: 5
     afterburnerHeatGeneration: 25
     afterburnerMaxHeat: 100
-    angleDrag: 0.2
-    linearBounceFactor: 0
-    angleBounceFactor: 1
-    afterburner: 0
     engineModel: {fileID: 0}
     hullModel: {fileID: 0}
   visualController: {fileID: 0}
