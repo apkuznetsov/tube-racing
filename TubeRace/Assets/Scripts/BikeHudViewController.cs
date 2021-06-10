@@ -24,7 +24,7 @@ namespace TubeRace.UserInterface
             int laps = (int) (bike.Distance / bike.Track.Length()) + 1;
             labelLapNumber.text = "Lap: " + laps;
 
-            labelRollAngle.text = "Angle: " + (int) (bike.RollAngle) + " deg";
+            labelRollAngle.text = "Angle: " + (int) (bike.Angle) + " deg";
 
             labelHeat.text = "Heat: " + (int) (bike.NormalizedHeat * 100.0f);
             labelFuel.text = "Fuel: " + (int) bike.Fuel;

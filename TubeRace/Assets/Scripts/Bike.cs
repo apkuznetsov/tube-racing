@@ -14,7 +14,6 @@ namespace TubeRace
         public float maxSpeed;
 
         [Range(0.0f, 100.0f)] public float thrust;
-
         [Range(0.0f, 100.0f)] public float agility;
 
         [Range(0.0f, 1.0f)] public float angleDrag;
@@ -102,9 +101,12 @@ namespace TubeRace
         }
 
         public float Distance { get; private set; }
-        public float Velocity { get; private set; }
-        public float RollAngle { get; private set; }
         public float PrevDistance { get; private set; }
+
+        public float Velocity { get; private set; }
+
+        public float Angle { get; private set; }
+        private float angularVelocity;
 
         /// <summary>
         /// Вкл/выкл доп. ускорителя
@@ -168,29 +170,30 @@ namespace TubeRace
             Distance += ds;
         }
 
-        private void UpdateBikeRollAngle()
+        private void UpdateBikeAngle()
         {
             float dt = Time.deltaTime;
-            RollAngle += horizontalThrustAxis * bikeParameters.agility * dt;
-            if (RollAngle > 180.0f)
-                RollAngle -= 360.0f;
-            else if (RollAngle < -180.0f)
-                RollAngle = 360.0f + RollAngle;
+            angularVelocity += horizontalThrustAxis * bikeParameters.agility;
+            Angle += angularVelocity * dt;
 
-            float ds = RollAngle * dt;
-            if (Physics.Raycast(transform.position, transform.right, ds))
-                RollAngle -= bikeParameters.angleBounceFactor;
-            else if (Physics.Raycast(transform.position, -transform.right, ds))
-                RollAngle += bikeParameters.angleBounceFactor;
+            // float ds = RollAngle * dt;
+            // if (Physics.Raycast(transform.position, transform.right, ds))
+            //     RollAngle -= bikeParameters.angleBounceFactor;
+            // else if (Physics.Raycast(transform.position, -transform.right, ds))
+            //     RollAngle += bikeParameters.angleBounceFactor;
 
-            if (horizontalThrustAxis == 0)
-                RollAngle += -RollAngle * bikeParameters.angleDrag * dt;
+            if (Angle > 180.0f)
+                Angle -= 360.0f;
+            else if (Angle < -180.0f)
+                Angle += 360.0f;
+
+            // Angle += -Angle * bikeParameters.angleDrag * dt;
         }
 
         private void UpdateBikePhysics()
         {
             UpdateBikeSpeed();
-            UpdateBikeRollAngle();
+            UpdateBikeAngle();
 
             if (Distance < 0)
                 Distance = 0;
@@ -198,7 +201,7 @@ namespace TubeRace
             Vector3 bikePos = track.Position(Distance);
             Vector3 bikeDir = track.Direction(Distance);
 
-            Quaternion quater = Quaternion.AngleAxis(RollAngle, Vector3.forward);
+            Quaternion quater = Quaternion.AngleAxis(Angle, Vector3.forward);
             Vector3 trackOffset = quater * (Vector3.up * track.Radius);
 
             transform.position = bikePos - trackOffset;
