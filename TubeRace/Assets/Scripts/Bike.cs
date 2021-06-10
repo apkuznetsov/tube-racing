@@ -43,11 +43,6 @@ namespace TubeRace
 
         public static GameObject[] GameObjects;
 
-        private void Start()
-        {
-            GameObjects = GameObject.FindGameObjectsWithTag(Tag);
-        }
-
         /// <summary>
         /// Data model
         /// </summary>
@@ -59,12 +54,57 @@ namespace TubeRace
         [SerializeField] private BikeViewController visualController;
 
         [SerializeField] private Track track;
-        public Track Track => track;
+
+        private float afterburnerHeat;
+        private float angularVelocity;
 
         /// <summary>
         /// Управление газом. Нормализованное. От -1 до +1
         /// </summary>
         private float forwardThrustAxis;
+
+        /// <summary>
+        /// Управление отклонением влево и вправо. Нормализованное. От -1 до +1
+        /// </summary>
+        private float horizontalThrustAxis;
+
+        public Track Track => track;
+
+        public float Fuel { get; private set; }
+
+        public float Distance { get; private set; }
+        public float PrevDistance { get; private set; }
+
+        public float Velocity { get; private set; }
+
+        public float Angle { get; private set; }
+
+        /// <summary>
+        /// Вкл/выкл доп. ускорителя
+        /// </summary>
+        public bool EnableAfterburner { get; set; }
+
+        public float NormalizedHeat
+        {
+            get
+            {
+                if (bikeParameters.afterburnerMaxHeat > 0)
+                    return afterburnerHeat / bikeParameters.afterburnerMaxHeat;
+
+                return 0.0f;
+            }
+        }
+
+        private void Start()
+        {
+            GameObjects = GameObject.FindGameObjectsWithTag(Tag);
+        }
+
+        private void Update()
+        {
+            UpdateAfterburnerHeat();
+            UpdateBikePhysics();
+        }
 
         /// <summary>
         /// Установка значения педали газа
@@ -75,17 +115,10 @@ namespace TubeRace
             forwardThrustAxis = val;
         }
 
-        /// <summary>
-        /// Управление отклонением влево и вправо. Нормализованное. От -1 до +1
-        /// </summary>
-        private float horizontalThrustAxis;
-
         public void SetHorizontalThrustAxis(float val)
         {
             horizontalThrustAxis = val;
         }
-
-        public float Fuel { get; private set; }
 
         public void AddFuel(float amount)
         {
@@ -100,32 +133,6 @@ namespace TubeRace
 
             Fuel -= amount;
             return false;
-        }
-
-        public float Distance { get; private set; }
-        public float PrevDistance { get; private set; }
-
-        public float Velocity { get; private set; }
-
-        public float Angle { get; private set; }
-        private float angularVelocity;
-
-        /// <summary>
-        /// Вкл/выкл доп. ускорителя
-        /// </summary>
-        public bool EnableAfterburner { get; set; }
-
-        private float afterburnerHeat;
-
-        public float NormalizedHeat
-        {
-            get
-            {
-                if (bikeParameters.afterburnerMaxHeat > 0)
-                    return afterburnerHeat / bikeParameters.afterburnerMaxHeat;
-
-                return 0.0f;
-            }
         }
 
         public void CoolAfterburner()
@@ -210,12 +217,6 @@ namespace TubeRace
 
             transform.position = bikePos - trackOffset;
             transform.rotation = Quaternion.LookRotation(bikeDir, trackOffset);
-        }
-
-        private void Update()
-        {
-            UpdateAfterburnerHeat();
-            UpdateBikePhysics();
         }
     }
 }
