@@ -7,8 +7,9 @@ namespace TubeRace.UserInterface
     {
         [SerializeField] private Text labelSpeed;
         [SerializeField] private Text labelDistance;
-        [SerializeField] private Text labelRollAngle;
         [SerializeField] private Text labelLapNumber;
+
+        [SerializeField] private Text labelRollAngle;
 
         [SerializeField] private Text labelHeat;
         [SerializeField] private Text labelFuel;
@@ -19,10 +20,11 @@ namespace TubeRace.UserInterface
         {
             labelSpeed.text = "Speed: " + (int) (bike.Velocity) + " m/s";
             labelDistance.text = "Distance: " + (int) (bike.Distance) + " m";
-            labelRollAngle.text = "Angle: " + (int) (bike.RollAngle) + " deg";
 
             int laps = (int) (bike.Distance / bike.Track.Length()) + 1;
             labelLapNumber.text = "Lap: " + laps;
+
+            labelRollAngle.text = "Angle: " + (int) (bike.RollAngle) + " deg";
 
             labelHeat.text = "Heat: " + (int) (bike.NormalizedHeat * 100.0f);
             labelFuel.text = "Fuel: " + (int) bike.Fuel;
