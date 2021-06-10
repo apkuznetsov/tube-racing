@@ -187,7 +187,7 @@ namespace TubeRace
             else if (Angle < -180.0f)
                 Angle += 360.0f;
 
-            // Angle += -Angle * bikeParameters.angleDrag * dt;
+            angularVelocity += -angularVelocity * bikeParameters.angleDrag * dt;
         }
 
         private void UpdateBikePhysics()
