@@ -11,23 +11,19 @@ namespace TubeRace
     {
         [Range(0.0f, 10.0f)] public float mass;
 
-        [Range(100.0f, 1000.0f)] public float maxSpeed;
-
-        [Range(100.0f, 1000.0f)] public float maxAngularSpeed;
-
+        [Range(100.0f, 1000.0f)] public float maxVelocity;
         [Range(0.0f, 100.0f)] public float thrust;
-        [Range(0.0f, 100.0f)] public float agility;
+        [Range(0.0f, 1.0f)] public float bounceFactor;
 
-        [Range(0.0f, 1.0f)] public float angleDrag;
-
-        [Range(0.0f, 1.0f)] public float linearBounceFactor;
-        [Range(0.0f, 1.0f)] public float angleBounceFactor;
+        [Range(100.0f, 1000.0f)] public float maxAngularVelocity;
+        [Range(0.0f, 100.0f)] public float angularThrust;
+        [Range(0.0f, 1.0f)] public float angularDrag;
 
         public float afterburnerThrust;
-        public float afterburnerMaxSpeedBonus;
+        public float afterburnerMaxVelocityBonus;
 
         public float afterburnerCoolSpeed;
-        public float afterburnerHeatGeneration;
+        public float afterburnerHeatSpeed;
         public float afterburnerMaxHeat;
 
         public GameObject engineModel;
@@ -143,35 +139,43 @@ namespace TubeRace
         private void UpdateAfterburnerHeat()
         {
             afterburnerHeat -= initial.afterburnerCoolSpeed * Time.deltaTime;
+
             if (afterburnerHeat < 0)
                 afterburnerHeat = 0;
+
+            if (EnableAfterburner)
+                afterburnerHeat += initial.afterburnerHeatSpeed * Time.deltaTime;
+            
+            // check max heat
         }
 
-        private void UpdateBikeSpeed()
+        private void UpdateBikeVelocity()
         {
             float dt = Time.deltaTime;
-            float currMaxSpeed = initial.maxSpeed;
 
             float forceThrustMax = initial.thrust;
-            float maxSpeed = initial.maxSpeed;
+            float velocityMax = initial.maxVelocity;
             float force = forwardThrustAxis * initial.thrust;
+
             if (EnableAfterburner
                 && CanConsumeFuel(1.0f * Time.deltaTime))
             {
-                afterburnerHeat += initial.afterburnerHeatGeneration * Time.deltaTime;
+                afterburnerHeat += initial.afterburnerHeatSpeed * Time.deltaTime;
 
                 force += initial.afterburnerThrust;
-                maxSpeed += initial.afterburnerMaxSpeedBonus;
+                velocityMax += initial.afterburnerMaxVelocityBonus;
                 forceThrustMax += initial.afterburnerThrust;
             }
 
-            force += -Velocity * (forceThrustMax / maxSpeed);
+            float forceDrag = -Velocity * (forceThrustMax / velocityMax);
+            force += forceDrag;
+
             Velocity += force * dt;
 
             float ds = Velocity * dt;
             if (Physics.Raycast(transform.position, transform.forward, ds))
             {
-                Velocity = -Velocity * initial.linearBounceFactor;
+                Velocity = -Velocity * initial.bounceFactor;
                 ds = Velocity * dt;
             }
 
@@ -182,7 +186,7 @@ namespace TubeRace
         private void UpdateBikeAngle()
         {
             float dt = Time.deltaTime;
-            angularVelocity += horizontalThrustAxis * initial.agility;
+            angularVelocity += horizontalThrustAxis * initial.angularThrust;
             Angle += angularVelocity * dt;
 
             if (Angle > 180.0f)
@@ -190,14 +194,14 @@ namespace TubeRace
             else if (Angle < -180.0f)
                 Angle += 360.0f;
 
-            angularVelocity += -angularVelocity * initial.angleDrag * dt;
+            angularVelocity += -angularVelocity * initial.angularDrag * dt;
             angularVelocity = Mathf.Clamp(angularVelocity,
-                -initial.maxAngularSpeed, initial.maxAngularSpeed);
+                -initial.maxAngularVelocity, initial.maxAngularVelocity);
         }
 
         private void UpdateBikePhysics()
         {
-            UpdateBikeSpeed();
+            UpdateBikeVelocity();
             UpdateBikeAngle();
 
             if (Distance < 0)
