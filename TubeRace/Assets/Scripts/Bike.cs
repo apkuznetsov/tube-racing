@@ -11,11 +11,16 @@ namespace TubeRace
     {
         [Range(0.0f, 10.0f)] public float mass;
 
-        [Range(0.0f, 100.0f)] public float thrust;
-
         public float maxSpeed;
 
+        [Range(0.0f, 100.0f)] public float thrust;
+
         [Range(0.0f, 100.0f)] public float agility;
+
+        [Range(0.0f, 1.0f)] public float angleDrag;
+
+        [Range(0.0f, 1.0f)] public float linearBounceFactor;
+        [Range(0.0f, 1.0f)] public float angleBounceFactor;
 
         public float afterburnerThrust;
         public float afterburnerMaxSpeedBonus;
@@ -23,13 +28,6 @@ namespace TubeRace
         public float afterburnerCoolSpeed;
         public float afterburnerHeatGeneration;
         public float afterburnerMaxHeat;
-
-        [Range(0.0f, 1.0f)] public float angleDrag;
-
-        [Range(0.0f, 1.0f)] public float linearBounceFactor;
-        [Range(0.0f, 1.0f)] public float angleBounceFactor;
-
-        public bool afterburner;
 
         public GameObject engineModel;
         public GameObject hullModel;
@@ -40,7 +38,7 @@ namespace TubeRace
     /// </summary>
     public class Bike : MonoBehaviour
     {
-        public static readonly string Tag = "Bike";
+        private const string Tag = "Bike";
 
         public static GameObject[] GameObjects;
 
@@ -60,65 +58,12 @@ namespace TubeRace
         [SerializeField] private BikeViewController visualController;
 
         [SerializeField] private Track track;
-
-        private float afterburnerHeat;
-        private float fuel;
-
-        public float NormalizedHeat()
-        {
-            if (bikeParameters.afterburnerMaxHeat > 0)
-                return afterburnerHeat / bikeParameters.afterburnerMaxHeat;
-
-            return 0.0f;
-        }
-
-        private float distance;
-        private float velocity;
-        private float rollAngle;
-
-        private float prevDistance;
-
-        public float Fuel => fuel;
-
-        public float Distance => distance;
-        public float Velocity => velocity;
-        public float RollAngle => rollAngle;
-
-        public float PrevDistance => prevDistance;
-
         public Track Track => track;
-
-        public void AddFuel(float amount)
-        {
-            fuel += amount;
-
-            fuel = Mathf.Clamp(fuel, 0 , 100);
-        }
-        
-        private bool CanConsumeFuelForAfterburner(float amount)
-        {
-            if (fuel < amount)
-                return false;
-
-            fuel -= amount;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Вкл/выкл доп. ускорителя
-        /// </summary>
-        public bool EnableAfterburner { get; set; }
 
         /// <summary>
         /// Управление газом. Нормализованное. От -1 до +1
         /// </summary>
         private float forwardThrustAxis;
-
-        /// <summary>
-        /// Управление отклонением влево и вправо. Нормализованное. От -1 до +1
-        /// </summary>
-        private float horizontalThrustAxis;
 
         /// <summary>
         /// Установка значения педали газа
@@ -129,9 +74,54 @@ namespace TubeRace
             forwardThrustAxis = val;
         }
 
+        /// <summary>
+        /// Управление отклонением влево и вправо. Нормализованное. От -1 до +1
+        /// </summary>
+        private float horizontalThrustAxis;
+
         public void SetHorizontalThrustAxis(float val)
         {
             horizontalThrustAxis = val;
+        }
+
+        public float Fuel { get; private set; }
+
+        public void AddFuel(float amount)
+        {
+            Fuel += amount;
+            Fuel = Mathf.Clamp(Fuel, 0, 100);
+        }
+
+        private bool CanConsumeFuel(float amount)
+        {
+            if (Fuel < amount)
+                return false;
+
+            Fuel -= amount;
+            return false;
+        }
+
+        public float Distance { get; private set; }
+        public float Velocity { get; private set; }
+        public float RollAngle { get; private set; }
+        public float PrevDistance { get; private set; }
+
+        /// <summary>
+        /// Вкл/выкл доп. ускорителя
+        /// </summary>
+        public bool EnableAfterburner { get; set; }
+
+        private float afterburnerHeat;
+
+        public float NormalizedHeat
+        {
+            get
+            {
+                if (bikeParameters.afterburnerMaxHeat > 0)
+                    return afterburnerHeat / bikeParameters.afterburnerMaxHeat;
+
+                return 0.0f;
+            }
         }
 
         public void CoolAfterburner()
@@ -155,46 +145,46 @@ namespace TubeRace
             float maxSpeed = bikeParameters.maxSpeed;
             float force = forwardThrustAxis * bikeParameters.thrust;
             if (EnableAfterburner
-                && CanConsumeFuelForAfterburner(1.0f * Time.deltaTime))
+                && CanConsumeFuel(1.0f * Time.deltaTime))
             {
                 afterburnerHeat += bikeParameters.afterburnerHeatGeneration * Time.deltaTime;
-                
+
                 force += bikeParameters.afterburnerThrust;
                 maxSpeed += bikeParameters.afterburnerMaxSpeedBonus;
                 forceThrustMax += bikeParameters.afterburnerThrust;
             }
 
-            force += -velocity * (forceThrustMax / maxSpeed);
-            velocity += force * dt;
+            force += -Velocity * (forceThrustMax / maxSpeed);
+            Velocity += force * dt;
 
-            float ds = velocity * dt;
+            float ds = Velocity * dt;
             if (Physics.Raycast(transform.position, transform.forward, ds))
             {
-                velocity = -velocity * bikeParameters.linearBounceFactor;
-                ds = velocity * dt;
+                Velocity = -Velocity * bikeParameters.linearBounceFactor;
+                ds = Velocity * dt;
             }
 
-            prevDistance = distance;
-            distance += ds;
+            PrevDistance = Distance;
+            Distance += ds;
         }
 
         private void UpdateBikeRollAngle()
         {
             float dt = Time.deltaTime;
-            rollAngle += horizontalThrustAxis * bikeParameters.agility * dt;
-            if (rollAngle > 180.0f)
-                rollAngle -= 360.0f;
-            else if (rollAngle < -180.0f)
-                rollAngle = 360.0f + rollAngle;
+            RollAngle += horizontalThrustAxis * bikeParameters.agility * dt;
+            if (RollAngle > 180.0f)
+                RollAngle -= 360.0f;
+            else if (RollAngle < -180.0f)
+                RollAngle = 360.0f + RollAngle;
 
-            float ds = rollAngle * dt;
+            float ds = RollAngle * dt;
             if (Physics.Raycast(transform.position, transform.right, ds))
-                rollAngle -= bikeParameters.angleBounceFactor;
+                RollAngle -= bikeParameters.angleBounceFactor;
             else if (Physics.Raycast(transform.position, -transform.right, ds))
-                rollAngle += bikeParameters.angleBounceFactor;
+                RollAngle += bikeParameters.angleBounceFactor;
 
             if (horizontalThrustAxis == 0)
-                rollAngle += -rollAngle * bikeParameters.angleDrag * dt;
+                RollAngle += -RollAngle * bikeParameters.angleDrag * dt;
         }
 
         private void UpdateBikePhysics()
@@ -202,13 +192,13 @@ namespace TubeRace
             UpdateBikeSpeed();
             UpdateBikeRollAngle();
 
-            if (distance < 0)
-                distance = 0;
+            if (Distance < 0)
+                Distance = 0;
 
-            Vector3 bikePos = track.Position(distance);
-            Vector3 bikeDir = track.Direction(distance);
+            Vector3 bikePos = track.Position(Distance);
+            Vector3 bikeDir = track.Direction(Distance);
 
-            Quaternion quater = Quaternion.AngleAxis(rollAngle, Vector3.forward);
+            Quaternion quater = Quaternion.AngleAxis(RollAngle, Vector3.forward);
             Vector3 trackOffset = quater * (Vector3.up * track.Radius);
 
             transform.position = bikePos - trackOffset;
