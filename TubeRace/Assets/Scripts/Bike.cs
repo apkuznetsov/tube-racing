@@ -153,7 +153,8 @@ namespace TubeRace
             if (afterburnerHeat < 0)
                 afterburnerHeat = 0;
 
-            // check max heat
+            if (afterburnerHeat > initial.afterburnerMaxHeat)
+                Slowdown(100);
         }
 
         private void UpdateBikeVelocity()
