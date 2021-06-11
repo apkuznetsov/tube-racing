@@ -7,27 +7,23 @@ namespace TubeRace
     /// Data model
     /// </summary>
     [Serializable]
-    public class BikeParameters
+    public class BikeParametersInitial
     {
         [Range(0.0f, 10.0f)] public float mass;
 
-        [Range(100.0f, 1000.0f)] public float maxSpeed;
-
-        [Range(100.0f, 1000.0f)] public float maxAngularSpeed;
-
+        [Range(100.0f, 1000.0f)] public float maxVelocity;
         [Range(0.0f, 100.0f)] public float thrust;
-        [Range(0.0f, 100.0f)] public float agility;
+        [Range(0.0f, 1.0f)] public float bounceFactor;
 
-        [Range(0.0f, 1.0f)] public float angleDrag;
-
-        [Range(0.0f, 1.0f)] public float linearBounceFactor;
-        [Range(0.0f, 1.0f)] public float angleBounceFactor;
+        [Range(100.0f, 1000.0f)] public float maxAngularVelocity;
+        [Range(0.0f, 100.0f)] public float angularThrust;
+        [Range(0.0f, 1.0f)] public float angularDrag;
 
         public float afterburnerThrust;
-        public float afterburnerMaxSpeedBonus;
+        public float afterburnerMaxVelocityBonus;
 
         public float afterburnerCoolSpeed;
-        public float afterburnerHeatGeneration;
+        public float afterburnerHeatSpeed;
         public float afterburnerMaxHeat;
 
         public GameObject engineModel;
@@ -46,7 +42,7 @@ namespace TubeRace
         /// <summary>
         /// Data model
         /// </summary>
-        [SerializeField] private BikeParameters bikeParameters;
+        [SerializeField] private BikeParametersInitial initial;
 
         /// <summary>
         /// View
@@ -88,8 +84,8 @@ namespace TubeRace
         {
             get
             {
-                if (bikeParameters.afterburnerMaxHeat > 0)
-                    return afterburnerHeat / bikeParameters.afterburnerMaxHeat;
+                if (initial.afterburnerMaxHeat > 0)
+                    return afterburnerHeat / initial.afterburnerMaxHeat;
 
                 return 0.0f;
             }
@@ -132,7 +128,7 @@ namespace TubeRace
                 return false;
 
             Fuel -= amount;
-            return false;
+            return true;
         }
 
         public void CoolAfterburner()
@@ -140,38 +136,56 @@ namespace TubeRace
             afterburnerHeat = 0;
         }
 
-        private void UpdateAfterburnerHeat()
+        public void Slowdown(int percent)
         {
-            afterburnerHeat -= bikeParameters.afterburnerCoolSpeed * Time.deltaTime;
-            if (afterburnerHeat < 0)
-                afterburnerHeat = 0;
+            Velocity -= Velocity * percent / 100.0f;
         }
 
-        private void UpdateBikeSpeed()
+        private void Heat()
+        {
+            afterburnerHeat += Velocity;
+        }
+
+        private void UpdateAfterburnerHeat()
+        {
+            afterburnerHeat -= initial.afterburnerCoolSpeed * Time.deltaTime;
+
+            if (afterburnerHeat < 0)
+                afterburnerHeat = 0;
+
+            if (afterburnerHeat > initial.afterburnerMaxHeat)
+                Slowdown(100);
+        }
+
+        private void UpdateBikeVelocity()
         {
             float dt = Time.deltaTime;
-            float currMaxSpeed = bikeParameters.maxSpeed;
 
-            float forceThrustMax = bikeParameters.thrust;
-            float maxSpeed = bikeParameters.maxSpeed;
-            float force = forwardThrustAxis * bikeParameters.thrust;
+            float forceThrustMax = initial.thrust;
+            float velocityMax = initial.maxVelocity;
+            float force = forwardThrustAxis * initial.thrust;
+
             if (EnableAfterburner
                 && CanConsumeFuel(1.0f * Time.deltaTime))
             {
-                afterburnerHeat += bikeParameters.afterburnerHeatGeneration * Time.deltaTime;
+                afterburnerHeat += initial.afterburnerHeatSpeed * Time.deltaTime;
 
-                force += bikeParameters.afterburnerThrust;
-                maxSpeed += bikeParameters.afterburnerMaxSpeedBonus;
-                forceThrustMax += bikeParameters.afterburnerThrust;
+                force += initial.afterburnerThrust;
+                velocityMax += initial.afterburnerMaxVelocityBonus;
+                forceThrustMax += initial.afterburnerThrust;
             }
 
-            force += -Velocity * (forceThrustMax / maxSpeed);
+            float forceDrag = -Velocity * (forceThrustMax / velocityMax);
+            force += forceDrag;
+
             Velocity += force * dt;
 
             float ds = Velocity * dt;
             if (Physics.Raycast(transform.position, transform.forward, ds))
             {
-                Velocity = -Velocity * bikeParameters.linearBounceFactor;
+                Heat();
+                
+                Velocity = -Velocity * initial.bounceFactor;
                 ds = Velocity * dt;
             }
 
@@ -182,7 +196,7 @@ namespace TubeRace
         private void UpdateBikeAngle()
         {
             float dt = Time.deltaTime;
-            angularVelocity += horizontalThrustAxis * bikeParameters.agility;
+            angularVelocity += horizontalThrustAxis * initial.angularThrust;
             Angle += angularVelocity * dt;
 
             if (Angle > 180.0f)
@@ -190,14 +204,14 @@ namespace TubeRace
             else if (Angle < -180.0f)
                 Angle += 360.0f;
 
-            angularVelocity += -angularVelocity * bikeParameters.angleDrag * dt;
+            angularVelocity += -angularVelocity * initial.angularDrag * dt;
             angularVelocity = Mathf.Clamp(angularVelocity,
-                -bikeParameters.maxAngularSpeed, bikeParameters.maxAngularSpeed);
+                -initial.maxAngularVelocity, initial.maxAngularVelocity);
         }
 
         private void UpdateBikePhysics()
         {
-            UpdateBikeSpeed();
+            UpdateBikeVelocity();
             UpdateBikeAngle();
 
             if (Distance < 0)
