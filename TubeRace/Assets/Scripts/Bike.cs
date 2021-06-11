@@ -128,7 +128,7 @@ namespace TubeRace
                 return false;
 
             Fuel -= amount;
-            return false;
+            return true;
         }
 
         public void CoolAfterburner()
@@ -143,9 +143,6 @@ namespace TubeRace
             if (afterburnerHeat < 0)
                 afterburnerHeat = 0;
 
-            if (EnableAfterburner)
-                afterburnerHeat += initial.afterburnerHeatSpeed * Time.deltaTime;
-            
             // check max heat
         }
 
