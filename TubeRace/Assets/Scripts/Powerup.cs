@@ -7,7 +7,7 @@ namespace TubeRace
         [SerializeField] private Track track;
 
         [SerializeField] private float distance;
-        [SerializeField] private float rollAngle;
+        [SerializeField] private float angle;
 
         protected abstract void OnPicked(Bike bike);
 
@@ -16,7 +16,7 @@ namespace TubeRace
             Vector3 obstacleDir = track.Direction(distance);
             Vector3 trackPosition = track.Position(distance);
 
-            Quaternion quater = Quaternion.AngleAxis(rollAngle, Vector3.forward);
+            Quaternion quater = Quaternion.AngleAxis(angle, Vector3.forward);
             Vector3 trackOffset = quater * (Vector3.up * (0));
 
             transform.position = trackPosition - trackOffset;
