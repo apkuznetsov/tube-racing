@@ -136,6 +136,11 @@ namespace TubeRace
             afterburnerHeat = 0;
         }
 
+        public void Slowdown(int percent)
+        {
+            Velocity -= Velocity * percent / 100.0f;
+        }
+
         private void UpdateAfterburnerHeat()
         {
             afterburnerHeat -= initial.afterburnerCoolSpeed * Time.deltaTime;
