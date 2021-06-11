@@ -18,3 +18,11 @@
 2. Добавить вращательную анимацию препятствию.
 
 ![](https://raw.githubusercontent.com/apkuznetsov/lic-unity-course/main/about/hw04.gif)
+
+### Задание 5
+
+1. Добавить перегрев при ударе байка о препятствие.
+2. Добавить платформу торможения, которая снизит скорость байка при прохождении через неё.
+3. Супер-сложное: добавить углы для паверапа.
+
+![](https://raw.githubusercontent.com/apkuznetsov/lic-unity-course/main/about/hw05.gif)
