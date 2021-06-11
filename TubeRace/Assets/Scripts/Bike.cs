@@ -141,6 +141,11 @@ namespace TubeRace
             Velocity -= Velocity * percent / 100.0f;
         }
 
+        private void Heat()
+        {
+            afterburnerHeat += Velocity;
+        }
+
         private void UpdateAfterburnerHeat()
         {
             afterburnerHeat -= initial.afterburnerCoolSpeed * Time.deltaTime;
@@ -177,6 +182,8 @@ namespace TubeRace
             float ds = Velocity * dt;
             if (Physics.Raycast(transform.position, transform.forward, ds))
             {
+                Heat();
+                
                 Velocity = -Velocity * initial.bounceFactor;
                 ds = Velocity * dt;
             }
