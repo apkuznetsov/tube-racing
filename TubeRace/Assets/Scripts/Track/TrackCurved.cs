@@ -31,6 +31,9 @@ namespace TubeRace
 
         [SerializeField] private Vector3[] trackSampledPoints;
 
+        [SerializeField] private bool DebugDrawBezier;
+        [SerializeField] private bool DebugDrawSampledPoints;
+
         public override float Length()
         {
             return 1.0f;
@@ -63,6 +66,14 @@ namespace TubeRace
 
             var lastCurrPoints = GenerateBezierPoints(trackPoints[trackPoints.Length - 1], trackPoints[0], division);
             points.AddRange(lastCurrPoints);
+            trackSampledPoints = points.ToArray();
+
+            EditorUtility.SetDirty(this);
+        }
+
+        private void DrawSampledTrackPoints()
+        {
+            Handles.DrawAAPolyLine(trackSampledPoints);
         }
 
         private static IEnumerable<Vector3> GenerateBezierPoints(
@@ -119,7 +130,11 @@ namespace TubeRace
 
         private void OnDrawGizmos()
         {
-            DrawBezierCurveGizmos();
+            if (DebugDrawBezier)
+                DrawBezierCurveGizmos();
+
+            if (DebugDrawSampledPoints)
+                DrawSampledTrackPoints();
         }
     }
 }
