@@ -62,7 +62,18 @@ namespace TubeRace
 
         public override Vector3 Direction(float distance)
         {
-            return Vector3.zero;
+            distance = Mathf.Repeat(distance, trackSampledLength);
+
+            for (int i = 0; i < trackSampledSegmentLengths.Length; i++)
+            {
+                float diff = distance - trackSampledSegmentLengths[i];
+                if (diff < 0)
+                    return (trackSampledPoints[i + 1] - trackSampledPoints[i]).normalized;
+
+                distance -= trackSampledSegmentLengths[i];
+            }
+
+            return Vector3.forward;
         }
 
         public void GenerateTrackData()
