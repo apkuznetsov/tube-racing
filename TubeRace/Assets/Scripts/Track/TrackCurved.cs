@@ -43,6 +43,20 @@ namespace TubeRace
 
         public override Vector3 Position(float distance)
         {
+            distance = Mathf.Repeat(distance, trackSampledLength);
+
+            for (int i = 0; i < trackSampledSegmentLengths.Length; i++)
+            {
+                float diff = distance - trackSampledSegmentLengths[i];
+                if (diff < 0)
+                {
+                    float t = distance / trackSampledSegmentLengths[i];
+                    return Vector3.Lerp(trackSampledPoints[i], trackSampledPoints[i + 1], t);
+                }
+
+                distance -= trackSampledSegmentLengths[i];
+            }
+
             return Vector3.zero;
         }
 
