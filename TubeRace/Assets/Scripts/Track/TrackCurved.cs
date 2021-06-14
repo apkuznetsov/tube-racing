@@ -30,13 +30,15 @@ namespace TubeRace
         [SerializeField] private int division;
 
         [SerializeField] private Vector3[] trackSampledPoints;
+        [SerializeField] private float[] trackSampledSegmentLengths;
+        [SerializeField] private float trackSampledLength;
 
         [SerializeField] private bool DebugDrawBezier;
         [SerializeField] private bool DebugDrawSampledPoints;
 
         public override float Length()
         {
-            return 1.0f;
+            return trackSampledLength;
         }
 
         public override Vector3 Position(float distance)
@@ -67,6 +69,19 @@ namespace TubeRace
             var lastCurrPoints = GenerateBezierPoints(trackPoints[trackPoints.Length - 1], trackPoints[0], division);
             points.AddRange(lastCurrPoints);
             trackSampledPoints = points.ToArray();
+
+            trackSampledSegmentLengths = new float[trackSampledPoints.Length - 1];
+            trackSampledLength = 0;
+
+            for (int i = 0; i < trackSampledPoints.Length - 1; i++)
+            {
+                Vector3 a = trackSampledPoints[i];
+                Vector3 b = trackSampledPoints[i + 1];
+
+                float segmentLength = (b - a).magnitude;
+                trackSampledSegmentLengths[i] = segmentLength;
+                trackSampledLength += segmentLength;
+            }
 
             EditorUtility.SetDirty(this);
         }
