@@ -8,8 +8,8 @@ using UnityEditor;
 namespace TubeRace
 {
 #if UNITY_EDITOR
-    [CustomEditor(typeof(TrackCurved))]
-    public class TrackCurvedEditor : Editor
+    [CustomEditor(typeof(TrackСlosedBezierCurve))]
+    public class TrackСlosedBezierCurveEditor : Editor
     {
         public override void OnInspectorGUI()
         {
@@ -17,13 +17,13 @@ namespace TubeRace
 
             if (GUILayout.Button("Generate"))
             {
-                ((TrackCurved) target).GenerateTrackData();
+                ((TrackСlosedBezierCurve) target).GenerateTrackData();
             }
         }
     }
 #endif
 
-    public class TrackCurved : Track
+    public class TrackСlosedBezierCurve : Track
     {
         [SerializeField] private CurvedTrackPoint[] trackPoints;
 
