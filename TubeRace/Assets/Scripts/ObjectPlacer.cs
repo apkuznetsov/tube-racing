@@ -8,6 +8,8 @@ namespace TubeRace
         [SerializeField] private int numObjects;
         [SerializeField] private Track track;
 
+        [SerializeField] private bool canRadomizeRotation;
+        
         private void Start()
         {
             float distance = 0;
@@ -18,6 +20,9 @@ namespace TubeRace
                 go.transform.position = track.Position(distance);
                 go.transform.rotation = track.Rotation(distance);
 
+                if (canRadomizeRotation)
+                    go.transform.Rotate(Vector3.forward, Random.Range(0, 360), Space.Self);
+                
                 distance += track.Length() / numObjects;
             }
         }
