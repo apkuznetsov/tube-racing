@@ -26,3 +26,10 @@
 3. Супер-сложное: добавить углы для паверапа.
 
 ![](https://raw.githubusercontent.com/apkuznetsov/lic-unity-course/main/about/hw05.gif)
+
+### Задание 6
+
+1. Создать аналогично кривому треку на сплайнах, трек по окружности.
+2. Добавить возможность генерировать объекты вдоль трека в скрипте ObjectPlacer с каким то шансом. 
+
+![](https://raw.githubusercontent.com/apkuznetsov/lic-unity-course/main/about/hw06.gif)
