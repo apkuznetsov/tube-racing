@@ -10,7 +10,6 @@ namespace TubeRace
 
         [SerializeField] private int seed;
         [SerializeField] private bool canRadomizeRotation;
-        [SerializeField] private bool canSkip;
         [Range(0.0f, 1.0f)] [SerializeField] private float skipProbability;
 
         private void Start()
@@ -20,7 +19,7 @@ namespace TubeRace
 
             for (int i = 0; i < numObjects; i++)
             {
-                if (!(canSkip && Random.Range(0.0f, 1.0f) <= skipProbability))
+                if (!(Random.Range(0.0f, 1.0f) <= skipProbability))
                 {
                     GameObject go = Instantiate(prefab);
                     go.transform.position = track.Position(distance);
