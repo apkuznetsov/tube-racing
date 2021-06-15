@@ -33,8 +33,8 @@ namespace TubeRace
         [SerializeField] private float[] trackSampledSegmentLengths;
         [SerializeField] private float trackSampledLength;
 
-        [SerializeField] private bool DebugDrawBezier;
-        [SerializeField] private bool DebugDrawSampledPoints;
+        [SerializeField] private bool debugDrawBezier;
+        [SerializeField] private bool debugDrawSampledPoints;
 
         public override float Length()
         {
@@ -170,10 +170,10 @@ namespace TubeRace
 
         private void OnDrawGizmos()
         {
-            if (DebugDrawBezier)
+            if (debugDrawBezier)
                 DrawBezierCurveGizmos();
 
-            if (DebugDrawSampledPoints)
+            if (debugDrawSampledPoints)
                 DrawSampledTrackPoints();
         }
     }
