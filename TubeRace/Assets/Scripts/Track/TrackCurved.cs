@@ -29,6 +29,7 @@ namespace TubeRace
 
         [SerializeField] private int division;
 
+        [SerializeField] private Quaternion[] trackSampledRotations;
         [SerializeField] private Vector3[] trackSampledPoints;
         [SerializeField] private float[] trackSampledSegmentLengths;
         [SerializeField] private float trackSampledLength;
@@ -76,23 +77,64 @@ namespace TubeRace
             return Vector3.forward;
         }
 
+        public override Quaternion Rotation(float distance)
+        {
+            distance = Mathf.Repeat(distance, trackSampledLength);
+
+            for (int i = 0; i < trackSampledSegmentLengths.Length; i++)
+            {
+                float diff = distance - trackSampledSegmentLengths[i];
+                if (diff < 0)
+                {
+                    float t = distance / trackSampledSegmentLengths[i];
+
+                    return Quaternion.Slerp(
+                        trackSampledRotations[i],
+                        trackSampledRotations[i + 1],
+                        t);
+                }
+
+                distance -= trackSampledSegmentLengths[i];
+            }
+
+            return Quaternion.identity;
+        }
+
         public void GenerateTrackData()
         {
             Debug.Log("Generating track data");
 
             var points = new List<Vector3>();
+            var rotations = new List<Quaternion>();
 
             if (trackPoints.Length < 3)
                 return;
 
             for (int i = 0; i < trackPoints.Length - 1; i++)
             {
-                var currPoints = GenerateBezierPoints(trackPoints[i], trackPoints[i + 1], division);
-                points.AddRange(currPoints);
+                var newPoints = GenerateBezierPoints(trackPoints[i], trackPoints[i + 1], division);
+                var newRotations = GenerateRotations(
+                    trackPoints[i].transform,
+                    trackPoints[i + 1].transform,
+                    newPoints);
+
+                rotations.AddRange(newRotations);
+                points.AddRange(newPoints);
             }
 
-            var lastCurrPoints = GenerateBezierPoints(trackPoints[trackPoints.Length - 1], trackPoints[0], division);
-            points.AddRange(lastCurrPoints);
+            var lastNewPoints = GenerateBezierPoints(
+                trackPoints[trackPoints.Length - 1],
+                trackPoints[0],
+                division);
+            var lastNewRotations = GenerateRotations(
+                trackPoints[trackPoints.Length - 1].transform,
+                trackPoints[0].transform,
+                lastNewPoints);
+
+            points.AddRange(lastNewPoints);
+            rotations.AddRange(lastNewRotations);
+
+            trackSampledRotations = rotations.ToArray();
             trackSampledPoints = points.ToArray();
 
             trackSampledSegmentLengths = new float[trackSampledPoints.Length - 1];
@@ -116,7 +158,30 @@ namespace TubeRace
             Handles.DrawAAPolyLine(trackSampledPoints);
         }
 
-        private static IEnumerable<Vector3> GenerateBezierPoints(
+        private Quaternion[] GenerateRotations(
+            Transform a,
+            Transform b,
+            Vector3[] points)
+        {
+            List<Quaternion> rotations = new List<Quaternion>();
+            float t = 0;
+
+            for (int i = 0; i < points.Length - 1; i++)
+            {
+                Vector3 dir = (points[i + 1] - points[i]).normalized;
+
+                Vector3 up = Vector3.Lerp(a.up, b.up, t);
+                Quaternion rotation = Quaternion.LookRotation(dir, up);
+                rotations.Add(rotation);
+
+                t += 1.0f / (points.Length - 1);
+            }
+
+            rotations.Add(b.rotation);
+            return rotations.ToArray();
+        }
+
+        private static Vector3[] GenerateBezierPoints(
             CurvedTrackPoint a,
             CurvedTrackPoint b,
             int division)

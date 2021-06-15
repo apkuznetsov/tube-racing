@@ -16,7 +16,7 @@ namespace TubeRace
             {
                 GameObject go = Instantiate(prefab);
                 go.transform.position = track.Position(distance);
-                go.transform.forward = track.Direction(distance);
+                go.transform.rotation = track.Rotation(distance);
 
                 distance += track.Length() / numObjects;
             }

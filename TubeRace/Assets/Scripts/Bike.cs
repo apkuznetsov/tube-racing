@@ -223,8 +223,13 @@ namespace TubeRace
             Quaternion quater = Quaternion.AngleAxis(Angle, Vector3.forward);
             Vector3 trackOffset = quater * (Vector3.up * track.Radius);
 
-            transform.position = bikePos - trackOffset;
-            transform.rotation = Quaternion.LookRotation(bikeDir, trackOffset);
+            //transform.position = bikePos - trackOffset;
+            //transform.rotation = Quaternion.LookRotation(bikeDir, trackOffset);
+
+            transform.position = bikePos;
+            transform.rotation = track.Rotation(Distance);
+            transform.Rotate(Vector3.forward, Angle, Space.Self);
+            transform.Translate(-Vector3.up * track.Radius, Space.Self);
         }
     }
 }
