@@ -5,7 +5,7 @@ namespace TubeRace
     /// <summary>
     /// Класс линейного трека
     /// </summary>
-    public class TrackLinear : Track
+    public class TrackLine : Track
     {
         [Header("Linear track properties")] [SerializeField]
         private Transform start;
