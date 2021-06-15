@@ -184,7 +184,7 @@ namespace TubeRace
             if (Physics.Raycast(transform.position, transform.forward, ds))
             {
                 Heat();
-                
+
                 Velocity = -Velocity * initial.bounceFactor;
                 ds = Velocity * dt;
             }
