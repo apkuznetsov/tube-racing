@@ -12,6 +12,7 @@ namespace TubeRace
         /// </summary>
         [Header("Base track properties")] [SerializeField]
         private float radius;
+
         public float Radius => radius;
 
         /// <summary>
@@ -34,5 +35,10 @@ namespace TubeRace
         /// <param name="distance"></param>
         /// <returns></returns>
         public abstract Vector3 Direction(float distance);
+
+        public virtual Quaternion Rotation(float distance)
+        {
+            return Quaternion.identity;
+        }
     }
 }
