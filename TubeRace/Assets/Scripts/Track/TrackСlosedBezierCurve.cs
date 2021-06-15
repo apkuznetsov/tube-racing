@@ -25,7 +25,7 @@ namespace TubeRace
 
     public class TrackСlosedBezierCurve : Track
     {
-        [SerializeField] private CurvedTrackPoint[] trackPoints;
+        [SerializeField] private BezierTrackPoint[] trackPoints;
 
         [SerializeField] private int division;
 
@@ -182,8 +182,8 @@ namespace TubeRace
         }
 
         private static Vector3[] GenerateBezierPoints(
-            CurvedTrackPoint a,
-            CurvedTrackPoint b,
+            BezierTrackPoint a,
+            BezierTrackPoint b,
             int division)
         {
             Transform aTransform = a.transform;
@@ -203,7 +203,7 @@ namespace TubeRace
                 division);
         }
 
-        private static void DrawTrackPartGizmos(CurvedTrackPoint a, CurvedTrackPoint b)
+        private static void DrawTrackPartGizmos(BezierTrackPoint a, BezierTrackPoint b)
         {
             Transform aTransform = a.transform;
             Transform bTransform = b.transform;
