@@ -158,15 +158,15 @@ namespace TubeRace
             Handles.DrawAAPolyLine(trackSampledPoints);
         }
 
-        private Quaternion[] GenerateRotations(
+        private static IEnumerable<Quaternion> GenerateRotations(
             Transform a,
             Transform b,
-            Vector3[] points)
+            IReadOnlyList<Vector3> points)
         {
-            List<Quaternion> rotations = new List<Quaternion>();
+            var rotations = new List<Quaternion>();
             float t = 0;
 
-            for (int i = 0; i < points.Length - 1; i++)
+            for (int i = 0; i < points.Count - 1; i++)
             {
                 Vector3 dir = (points[i + 1] - points[i]).normalized;
 
@@ -174,7 +174,7 @@ namespace TubeRace
                 Quaternion rotation = Quaternion.LookRotation(dir, up);
                 rotations.Add(rotation);
 
-                t += 1.0f / (points.Length - 1);
+                t += 1.0f / (points.Count - 1);
             }
 
             rotations.Add(b.rotation);

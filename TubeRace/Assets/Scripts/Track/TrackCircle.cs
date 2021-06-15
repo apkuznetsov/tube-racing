@@ -144,20 +144,20 @@ namespace TubeRace
             Handles.DrawAAPolyLine(trackSampledPoints);
         }
 
-        private IEnumerable<Quaternion> GenerateRotations(Vector3[] points)
+        private static IEnumerable<Quaternion> GenerateRotations(IReadOnlyList<Vector3> points)
         {
             var rotations = new List<Quaternion>();
             float t = 0;
 
-            for (int i = 0; i < points.Length - 1; i++)
+            for (int i = 0; i < points.Count - 1; i++)
             {
                 Quaternion rotation = GenerateRotation(points[i], points[i + 1], t);
                 rotations.Add(rotation);
 
-                t += 1.0f / (points.Length - 1);
+                t += 1.0f / (points.Count - 1);
             }
 
-            rotations.Add(GenerateRotation(points[points.Length - 1], points[0], t));
+            rotations.Add(GenerateRotation(points[points.Count - 1], points[0], t));
             return rotations.ToArray();
         }
 
