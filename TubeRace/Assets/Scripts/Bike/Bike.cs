@@ -157,6 +157,11 @@ namespace TubeRace
                 Slowdown(100);
         }
 
+        public float NormalizedVelocity()
+        {
+            return Mathf.Clamp01(Velocity / initial.maxVelocity);
+        }
+        
         private void UpdateBikeVelocity()
         {
             float dt = Time.deltaTime;
