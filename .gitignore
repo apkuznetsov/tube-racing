@@ -68,4 +68,6 @@ crashlytics-build.properties
 */.idea/
 */obj/
 
-*.FBX
+*.fbx
+
+TubeRace/Assets/KB3D/*
