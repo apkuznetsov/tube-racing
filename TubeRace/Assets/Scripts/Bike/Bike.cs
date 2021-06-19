@@ -157,6 +157,11 @@ namespace TubeRace
                 Slowdown(100);
         }
 
+        public float NormalizedVelocity()
+        {
+            return Mathf.Clamp01(Velocity / initial.maxVelocity);
+        }
+        
         private void UpdateBikeVelocity()
         {
             float dt = Time.deltaTime;
@@ -218,14 +223,6 @@ namespace TubeRace
                 Distance = 0;
 
             Vector3 bikePos = track.Position(Distance);
-            Vector3 bikeDir = track.Direction(Distance);
-
-            Quaternion quater = Quaternion.AngleAxis(Angle, Vector3.forward);
-            Vector3 trackOffset = quater * (Vector3.up * track.Radius);
-
-            //transform.position = bikePos - trackOffset;
-            //transform.rotation = Quaternion.LookRotation(bikeDir, trackOffset);
-
             transform.position = bikePos;
             transform.rotation = track.Rotation(Distance);
             transform.Rotate(Vector3.forward, Angle, Space.Self);

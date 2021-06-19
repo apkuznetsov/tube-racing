@@ -67,3 +67,9 @@ crashlytics-build.properties
 
 */.idea/
 */obj/
+
+*.fbx
+
+TubeRace/Assets/KB3D/
+TubeRace/Assets/SplineMesh/
+TubeRace/Assets/ThirdParty/
