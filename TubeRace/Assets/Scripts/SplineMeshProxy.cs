@@ -32,13 +32,10 @@ namespace TubeRace
         [SerializeField] private BezierTrackPoint pointB;
         private Spline spline;
 
-        private void Start()
-        {
-            spline = GetComponent<Spline>();
-        }
-
         public void UpdatePoints()
         {
+            spline = GetComponent<Spline>();
+
             SplineNode node0 = spline.nodes[0];
             Transform transformA = pointA.transform;
             Vector3 positionA = transformA.position;
