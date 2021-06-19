@@ -70,4 +70,5 @@ crashlytics-build.properties
 
 *.fbx
 
-TubeRace/Assets/KB3D/*
+TubeRace/Assets/KB3D/
+TubeRace/Assets/SplineMesh/
