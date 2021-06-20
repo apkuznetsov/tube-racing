@@ -51,6 +51,8 @@ namespace TubeRace
 
         [SerializeField] private Track track;
 
+        public bool IsMovementControlsActive { get; set; }
+
         private float afterburnerHeat;
         private float angularVelocity;
 
@@ -161,7 +163,7 @@ namespace TubeRace
         {
             return Mathf.Clamp01(Velocity / initial.maxVelocity);
         }
-        
+
         private void UpdateBikeVelocity()
         {
             float dt = Time.deltaTime;
