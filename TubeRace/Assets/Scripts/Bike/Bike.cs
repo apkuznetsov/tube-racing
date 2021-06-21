@@ -35,6 +35,33 @@ namespace TubeRace
     /// </summary>
     public class Bike : MonoBehaviour
     {
+        public class BikeStatistics
+        {
+            public float TopSpeed;
+            public float TotalTime;
+            public float BestLapTime;
+        }
+
+        private BikeStatistics bikeStatistics;
+        public BikeStatistics statistics => bikeStatistics;
+
+        private void Awake()
+        {
+            bikeStatistics = new BikeStatistics();
+        }
+
+        private float raceStartTime;
+
+        public void OnRaceStart()
+        {
+            raceStartTime = Time.time;
+        }
+
+        public void OnRaceEnd()
+        {
+            bikeStatistics.TotalTime = Time.time - raceStartTime;
+        }
+
         private const string Tag = "Bike";
 
         public static GameObject[] GameObjects;
@@ -186,6 +213,8 @@ namespace TubeRace
             force += forceDrag;
 
             Velocity += force * dt;
+            if (bikeStatistics.TopSpeed < Mathf.Abs(Velocity))
+                bikeStatistics.TopSpeed = Mathf.Abs(Velocity);
 
             float ds = Velocity * dt;
             if (Physics.Raycast(transform.position, transform.forward, ds))

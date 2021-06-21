@@ -42,6 +42,9 @@ namespace TubeRace
             foreach (RaceCondition c in conditions)
                 c.OnRaceStart();
 
+            foreach (Bike b in bikes)
+                b.OnRaceStart();
+
             eventRaceStart?.Invoke();
         }
 
