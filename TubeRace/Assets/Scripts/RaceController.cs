@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,6 +7,7 @@ namespace TubeRace
     public class RaceController : MonoBehaviour
     {
         [SerializeField] private int maxLaps;
+        public int MaxLaps => maxLaps;
 
         private enum RaceMode
         {
@@ -25,24 +27,51 @@ namespace TubeRace
         public float CountTimer { get; private set; }
 
         [SerializeField] private Bike[] bikes;
+        public IEnumerable<Bike> Bikes => bikes;
 
-        private bool IsRaceActive { get; set; }
+        public bool IsRaceActive { get; private set; }
+
+        [SerializeField] private RaceCondition[] conditions;
 
         private void StartRace()
         {
             IsRaceActive = true;
 
             CountTimer = countdownTimer;
+
+            foreach (RaceCondition c in conditions)
+                c.OnRaceStart();
+
+            eventRaceStart?.Invoke();
         }
 
         private void EndRace()
         {
             IsRaceActive = false;
+
+            foreach (RaceCondition c in conditions)
+                c.OnRaceEnd();
         }
 
         private void Start()
         {
             StartRace();
+        }
+
+        private void UpdateConditions()
+        {
+            if (!IsRaceActive)
+                return;
+
+            foreach (RaceCondition c in conditions)
+            {
+                if (!c.IsTriggered)
+                    return;
+            }
+
+            // race ends
+            EndRace();
+            eventRaceFinished?.Invoke();
         }
 
         private void UpdateRacePrestart()
@@ -65,6 +94,7 @@ namespace TubeRace
                 return;
 
             UpdateRacePrestart();
+            UpdateConditions();
         }
     }
 }
