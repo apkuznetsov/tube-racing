@@ -44,7 +44,7 @@ namespace TubeRace
         }
 
         private BikeStatistics bikeStatistics;
-        public BikeStatistics statistics => bikeStatistics;
+        public BikeStatistics Statistics => bikeStatistics;
 
         private void Awake()
         {
@@ -78,6 +78,9 @@ namespace TubeRace
         [SerializeField] private BikeViewController visualController;
 
         [SerializeField] private Track track;
+
+        [SerializeField] private bool isPlayerBike;
+        public bool IsPlayerBike => isPlayerBike;
 
         public bool IsMovementControlsActive { get; set; }
 

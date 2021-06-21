@@ -8,6 +8,8 @@ namespace TubeRace
     {
         [SerializeField] private Track track;
 
+        [SerializeField] private RaceResultsViewController raceResultsViewController;
+
         [SerializeField] private int maxLaps;
         public int MaxLaps => maxLaps;
 
@@ -117,8 +119,13 @@ namespace TubeRace
                 if (currDistance > totalRaceDistance)
                 {
                     finishedBikes.Add(bike);
-                    bike.statistics.Place = finishedBikes.Count;
+                    bike.Statistics.Place = finishedBikes.Count;
                     bike.OnRaceEnd();
+
+                    if (bike.IsPlayerBike)
+                    {
+                        raceResultsViewController.Show(bike.Statistics);
+                    }
                 }
             }
         }
