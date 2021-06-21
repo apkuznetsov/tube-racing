@@ -40,6 +40,7 @@ namespace TubeRace
             public float TopSpeed;
             public float TotalTime;
             public float BestLapTime;
+            public int Place;
         }
 
         private BikeStatistics bikeStatistics;
