@@ -15,7 +15,6 @@ namespace TubeRace
             foreach (Bike bike in bikes)
             {
                 int laps = (int) (bike.Distance / bike.Track.Length()) + 1;
-
                 if (laps < raceController.MaxLaps)
                     return;
             }

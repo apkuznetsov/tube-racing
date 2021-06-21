@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TubeRace
@@ -39,28 +40,37 @@ namespace TubeRace
         {
             public float TopSpeed;
             public float TotalTime;
-            public float BestLapTime;
+            public float BestTime;
             public int Place;
         }
 
-        private BikeStatistics bikeStatistics;
-        public BikeStatistics Statistics => bikeStatistics;
+        public BikeStatistics Statistics { get; private set; }
+
+        private List<float> lapDurations;
+        private int lap;
+        private float lapStartTime;
 
         private void Awake()
         {
-            bikeStatistics = new BikeStatistics();
+            Statistics = new BikeStatistics();
+            lapDurations = new List<float>();
         }
 
         private float raceStartTime;
 
         public void OnRaceStart()
         {
+            Statistics.Place = 0;
+            Statistics.TotalTime = 0;
+            Statistics.BestTime = 0;
+
             raceStartTime = Time.time;
+            lapStartTime = raceStartTime;
         }
 
         public void OnRaceEnd()
         {
-            bikeStatistics.TotalTime = Time.time - raceStartTime;
+            Statistics.TotalTime = Time.time - raceStartTime;
         }
 
         private const string Tag = "Bike";
@@ -133,6 +143,7 @@ namespace TubeRace
         {
             UpdateAfterburnerHeat();
             UpdateBikePhysics();
+            UpdateBestTime();
         }
 
         /// <summary>
@@ -217,8 +228,8 @@ namespace TubeRace
             force += forceDrag;
 
             Velocity += force * dt;
-            if (bikeStatistics.TopSpeed < Mathf.Abs(Velocity))
-                bikeStatistics.TopSpeed = Mathf.Abs(Velocity);
+            if (Statistics.TopSpeed < Mathf.Abs(Velocity))
+                Statistics.TopSpeed = Mathf.Abs(Velocity);
 
             float ds = Velocity * dt;
             if (Physics.Raycast(transform.position, transform.forward, ds))
@@ -262,6 +273,22 @@ namespace TubeRace
             transform.rotation = track.Rotation(Distance);
             transform.Rotate(Vector3.forward, Angle, Space.Self);
             transform.Translate(-Vector3.up * track.Radius, Space.Self);
+        }
+
+        private void UpdateBestTime()
+        {
+            int currLap = (int) (Distance / track.Length()) + 1;
+            if (currLap <= lap)
+                return;
+
+            float lapDuration = Time.time - lapStartTime;
+            lapStartTime = Time.time;
+
+            lapDurations.Add(lapDuration);
+            lap++;
+
+            if (lapDuration > Statistics.BestTime)
+                Statistics.BestTime = lapDuration;
         }
     }
 }

@@ -61,8 +61,10 @@ namespace TubeRace
         {
             IsRaceActive = false;
 
-            foreach (RaceCondition c in conditions)
-                c.OnRaceEnd();
+            foreach (RaceCondition condition in conditions)
+                condition.OnRaceEnd();
+
+            eventRaceFinished?.Invoke();
         }
 
         private void Start()
@@ -75,15 +77,13 @@ namespace TubeRace
             if (IsRaceActive)
                 return;
 
-            foreach (RaceCondition c in conditions)
+            foreach (RaceCondition condition in conditions)
             {
-                if (!c.IsTriggered)
+                if (!condition.IsTriggered)
                     return;
             }
 
-            // race ends
             EndRace();
-            eventRaceFinished?.Invoke();
         }
 
         private void UpdateRacePrestart()
@@ -102,11 +102,11 @@ namespace TubeRace
 
         private void UpdateBikeRacePositions()
         {
-            if (activeBikes.Count == 0)
-            {
-                EndRace();
-                return;
-            }
+            // if (activeBikes.Count == 0)
+            // {
+            //     EndRace();
+            //     return;
+            // }
 
             foreach (Bike bike in activeBikes)
             {
