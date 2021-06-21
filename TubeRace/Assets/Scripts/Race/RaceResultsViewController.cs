@@ -9,6 +9,7 @@ namespace TubeRace
         [SerializeField] private Text place;
         [SerializeField] private Text topSpeed;
         [SerializeField] private Text totalTime;
+        [SerializeField] private Text bestTime;
 
         private void Awake()
         {
@@ -22,6 +23,7 @@ namespace TubeRace
             place.text = "Place: " + stats.Place;
             topSpeed.text = "Top speed: " + ((int) stats.TopSpeed) + " m/s";
             totalTime.text = "Time: " + stats.TotalTime.ToString(CultureInfo.CurrentCulture) + " seconds";
+            bestTime.text = "Best lap: " + stats.BestTime.ToString(CultureInfo.CurrentCulture) + " seconds";
         }
     }
 }

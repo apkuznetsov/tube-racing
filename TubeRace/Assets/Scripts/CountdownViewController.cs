@@ -10,17 +10,14 @@ namespace TubeRace
 
         private void Update()
         {
-            int t = (int) raceController.CountTimer;
+            float currSeconds = raceController.CountTimer;
 
-            if (t != 0)
-            {
-                label.text = t.ToString();
-            }
+            if (currSeconds > 0.0f && currSeconds < 1.0f)
+                label.text = "GO";
+            else if (currSeconds > 1)
+                label.text = ((int) currSeconds).ToString();
             else
-            {
-                label.text = "";
                 gameObject.SetActive(false);
-            }
         }
     }
 }
