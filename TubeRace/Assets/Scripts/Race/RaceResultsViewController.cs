@@ -25,5 +25,12 @@ namespace TubeRace
             totalTime.text = "Time: " + stats.TotalTime.ToString(CultureInfo.CurrentCulture) + " seconds";
             bestTime.text = "Best lap: " + stats.BestTime.ToString(CultureInfo.CurrentCulture) + " seconds";
         }
+
+        public void OnButtonQuit()
+        {
+            UnityEngine.
+                SceneManagement.SceneManager.
+                LoadScene(PauseViewController.MainMenuScene);
+        }
     }
 }
