@@ -22,9 +22,12 @@ namespace TubeRace
 
         private void UpdateCameraShake()
         {
+            if (Time.timeScale <= 0)
+                return;
+
             float t = bike.NormalizedVelocity();
             float curveValue = shakeCurve.Evaluate(t);
-            
+
             Vector3 randomVector = Random.insideUnitSphere * shakeFactor;
             randomVector.z = 0;
 
