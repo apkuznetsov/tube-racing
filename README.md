@@ -38,7 +38,7 @@
 
 1. Соберите свой уровень. Три скриншота из редактора. Желательно короткое видео.
 
-![](https://raw.githubusercontent.com/apkuznetsov/lic-unity-course/main/about/hw07.mp4)
+![](https://raw.githubusercontent.com/apkuznetsov/lic-unity-course/main/about/hw07-1.png)
 
 ### Задание 8
 
@@ -46,3 +46,11 @@
 2. Добавить в окно статистики время лучшего круга.
 
 ![](https://raw.githubusercontent.com/apkuznetsov/lic-unity-course/main/about/hw08.gif)
+
+### Задание 9
+
+1. Добавить превью трека в окошке выбора трассы.
+2. Добавить в окно опций главного меню смену разрешения экрана. Используйте метод Screen.SetResolution
+3. Сложное: добавить в окошко выбора трассы длину трассы, актуальное значение из сцены с самим треком.
+
+![](https://raw.githubusercontent.com/apkuznetsov/lic-unity-course/main/about/hw09.gif)

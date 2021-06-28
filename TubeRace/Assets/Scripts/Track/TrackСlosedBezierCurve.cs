@@ -25,6 +25,7 @@ namespace TubeRace
 
     public class TrackСlosedBezierCurve : Track
     {
+        [SerializeField] private TrackDescription trackDescription;
         [SerializeField] private BezierTrackPoint[] trackPoints;
 
         [SerializeField] private int division;
@@ -37,6 +38,12 @@ namespace TubeRace
         [SerializeField] private bool debugDrawBezier;
         [SerializeField] private bool debugDrawSampledPoints;
 
+        private void Awake()
+        {
+            if (trackDescription != null)
+                trackDescription.SetLength(trackSampledLength);
+        }
+        
         public override float Length()
         {
             return trackSampledLength;
@@ -150,6 +157,9 @@ namespace TubeRace
                 trackSampledLength += segmentLength;
             }
 
+            if (trackDescription != null)
+                trackDescription.SetLength(trackSampledLength);
+            
             EditorUtility.SetDirty(this);
         }
 
