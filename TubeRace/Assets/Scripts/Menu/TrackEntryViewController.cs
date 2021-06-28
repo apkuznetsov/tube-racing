@@ -1,4 +1,6 @@
+using System.Globalization;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace TubeRace
@@ -6,11 +8,12 @@ namespace TubeRace
     public class TrackEntryViewController : MonoBehaviour
     {
         [SerializeField] private TrackDescription trackDescription;
-        [SerializeField] private Text trackName;
-        [SerializeField] private GameObject image;
-
         private TrackDescription activeDescription;
-        
+
+        [SerializeField] private Text labelTitle;
+        [SerializeField] private Text labelLength;
+        [SerializeField] private GameObject labelImage;
+
         private void Start()
         {
             if (trackDescription != null)
@@ -20,15 +23,15 @@ namespace TubeRace
         private void SetViewValues(TrackDescription description)
         {
             activeDescription = description;
-            trackName.text = description.TrackName;
-            image.GetComponent<Image>().sprite = description.PreviewImage;
+
+            labelTitle.text = description.Title;
+            labelLength.text = description.Length.ToString(CultureInfo.InvariantCulture);
+            labelImage.GetComponent<Image>().sprite = description.Preview;
         }
 
         public void OnButtonStartLevel()
         {
-            UnityEngine.
-                SceneManagement.SceneManager.
-                LoadScene(activeDescription.SceneName);
+            SceneManager.LoadScene(activeDescription.SceneName);
         }
     }
 }

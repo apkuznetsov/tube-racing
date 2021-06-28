@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd030d9d587570a4c824052048773394, type: 3}
   m_Name: track_closed_bezier_curve
   m_EditorClassIdentifier: 
-  trackName: Closed Bezier Curve
+  title: Closed Bezier Curve
   sceneName: scene_track_closed_bezier_curve
-  previewImage: {fileID: 21300000, guid: 8272c25a2a491a844806381d943fa41a, type: 3}
+  preview: {fileID: 21300000, guid: 8272c25a2a491a844806381d943fa41a, type: 3}
