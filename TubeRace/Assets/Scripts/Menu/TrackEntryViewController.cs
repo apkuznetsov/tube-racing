@@ -7,6 +7,7 @@ namespace TubeRace
     {
         [SerializeField] private TrackDescription trackDescription;
         [SerializeField] private Text trackName;
+        [SerializeField] private GameObject image;
 
         private TrackDescription activeDescription;
         
@@ -19,7 +20,8 @@ namespace TubeRace
         private void SetViewValues(TrackDescription description)
         {
             activeDescription = description;
-            trackName = description.TrackName;
+            trackName.text = description.TrackName;
+            image.GetComponent<Image>().sprite = description.PreviewImage;
         }
 
         public void OnButtonStartLevel()
