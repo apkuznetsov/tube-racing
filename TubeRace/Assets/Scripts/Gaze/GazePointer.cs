@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TubeRace
+namespace Gaze
 {
     public class GazePointer : MonoBehaviour
     {
