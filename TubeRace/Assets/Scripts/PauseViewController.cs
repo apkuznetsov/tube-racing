@@ -5,7 +5,7 @@ namespace TubeRace
 {
     public class PauseViewController : MonoBehaviour
     {
-        public static string MainMenuScene = "MainMenuScene";
+        public const string MainMenuScene = "MainMenuScene";
 
         [SerializeField] private RectTransform content;
 
@@ -18,12 +18,13 @@ namespace TubeRace
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
             {
                 if (raceController.IsRaceActive)
                 {
-                    content.gameObject.SetActive(!content.gameObject.activeInHierarchy);
-                    UpdateGameActivity(!content.gameObject.activeInHierarchy);
+                    GameObject go;
+                    (go = content.gameObject).SetActive(!content.gameObject.activeInHierarchy);
+                    UpdateGameActivity(!go.activeInHierarchy);
                 }
             }
         }
