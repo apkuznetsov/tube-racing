@@ -1,25 +1,12 @@
 using UnityEngine;
 
-namespace TubeRace
+namespace Gaze
 {
     public class NavigationPanel : MonoBehaviour
     {
-        [SerializeField] private AvatarMovement movement;
         [SerializeField] private GazePointer gazePointer;
         [Range(0.05f, 5f)] [SerializeField] private float deadZoneRadius;
         [Range(1f, 5f)] [SerializeField] private float maxRadius;
-
-        private Vector3 offset;
-
-        private void Awake()
-        {
-            offset = transform.position - movement.transform.position;
-        }
-
-        private void Update()
-        {
-            transform.position = movement.transform.position + offset;
-        }
 
         public Vector3 MoveDirection()
         {
@@ -30,6 +17,10 @@ namespace TubeRace
             {
                 relPos = Vector3.zero;
             }
+
+            relPos = new Vector3(
+                Vector3.Dot(transform.right, relPos),
+                Vector3.Dot(transform.up, relPos));
 
             return relPos;
         }
