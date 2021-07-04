@@ -70,8 +70,6 @@ crashlytics-build.properties
 
 *.fbx
 
-TubeRace/Assets/KB3D/
-TubeRace/Assets/SplineMesh/
 TubeRace/Assets/ThirdParty/
-
-TubeRace/Assets/FreeMountain/
+TubeRace/Assets/Samples/
+TubeRace/Assets/XR/

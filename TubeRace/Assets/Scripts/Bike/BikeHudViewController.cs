@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace TubeRace.UserInterface
+namespace TubeRace
 {
     public class BikeHudViewController : MonoBehaviour
     {

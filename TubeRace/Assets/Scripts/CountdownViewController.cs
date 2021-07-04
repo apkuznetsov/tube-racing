@@ -8,16 +8,30 @@ namespace TubeRace
         [SerializeField] private RaceController raceController;
         [SerializeField] private Text label;
 
-        private void Update()
+        private void DisableCountdown()
         {
-            float currSeconds = raceController.CountTimer;
+            label.text = "";
+            gameObject.SetActive(false);
+        }
+
+        private void UpdateCountdown()
+        {
+            float currSeconds = raceController.CountTimer + 1;
 
             if (currSeconds > 0.0f && currSeconds < 1.0f)
+            {
                 label.text = "GO";
-            else if (currSeconds > 1)
-                label.text = ((int) currSeconds).ToString();
+                Invoke(nameof(DisableCountdown), 1.0f);
+            }
             else
-                gameObject.SetActive(false);
+            {
+                label.text = ((int) currSeconds).ToString();
+            }
+        }
+
+        private void Update()
+        {
+            UpdateCountdown();
         }
     }
 }

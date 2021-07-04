@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Bike
+  - ControlDevice
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - NavigationPanel
   - Water
   - UI
   - 
