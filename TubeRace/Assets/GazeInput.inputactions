@@ -1,0 +1,33 @@
+{
+    "name": "GazeInput",
+    "maps": [
+        {
+            "name": "ManipulatorRight",
+            "id": "7930a4b2-b446-4e8b-979e-daf9c091194d",
+            "actions": [
+                {
+                    "name": "Select",
+                    "type": "Button",
+                    "id": "df048985-efb6-40d8-a11c-394b168646ae",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "9b4dcfbd-f4cb-4c09-a474-fe896a538870",
+                    "path": "<XRController>{RightHand}/gripButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
