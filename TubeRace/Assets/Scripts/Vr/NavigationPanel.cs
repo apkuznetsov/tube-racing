@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Gaze
+namespace Vr
 {
     public class NavigationPanel : MonoBehaviour
     {
