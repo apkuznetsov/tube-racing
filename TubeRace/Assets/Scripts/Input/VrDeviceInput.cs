@@ -4,7 +4,7 @@ using Vr;
 
 namespace TubeRace
 {
-    public class VrDeviceInput : Input
+    public class VrDeviceCustomInput : CustomInput
     {
         [SerializeField] private Lever lever;
 

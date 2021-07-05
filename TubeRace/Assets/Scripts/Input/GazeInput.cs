@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace TubeRace
 {
-    public class GazeInput : Input
+    public class GazeCustomInput : CustomInput
     {
         [SerializeField] private NavigationPanel navigationPanel;
 

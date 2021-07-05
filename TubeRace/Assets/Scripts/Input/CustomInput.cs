@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace TubeRace
 {
-    public abstract class Input : MonoBehaviour
+    public abstract class CustomInput : MonoBehaviour
     {
         public abstract Vector3 MoveDirection();
 
