@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Vr
+namespace TubeRace
 {
     public enum HandType
     {

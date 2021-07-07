@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Vr
+namespace TubeRace
 {
     public abstract class ControlDevice : MonoBehaviour
     {
