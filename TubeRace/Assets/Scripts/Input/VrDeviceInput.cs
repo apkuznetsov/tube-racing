@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using UnityEngine;
 using Vr;
 
 namespace TubeRace
 {
-    public class VrDeviceCustomInput : CustomInput
+    public class VrDeviceInput : NewInput
     {
         [SerializeField] private Lever lever;
 

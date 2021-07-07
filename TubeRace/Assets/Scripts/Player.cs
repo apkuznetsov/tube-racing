@@ -8,11 +8,7 @@ namespace TubeRace
     /// </summary>
     public class Player : MonoBehaviour
     {
-        [SerializeField] private CustomInput customInput;
-
-        [SerializeField] private NavigationPanel navigationPanel;
-
-        [SerializeField] private string nickname;
+        [SerializeField] private NewInput newInput;
 
         [SerializeField] private Bike activeBike;
 
@@ -21,12 +17,12 @@ namespace TubeRace
             if (!activeBike.IsMovementControlsActive)
                 return;
 
-            Vector3 direction = customInput.MoveDirection();
+            Vector3 direction = newInput.MoveDirection();
 
             activeBike.SetForwardThrustAxis(direction.y);
             activeBike.SetHorizontalThrustAxis(direction.x);
 
-            activeBike.EnableAfterburner = customInput.EnableAfterburner();
+            activeBike.EnableAfterburner = newInput.EnableAfterburner();
         }
 
         private void Update()
