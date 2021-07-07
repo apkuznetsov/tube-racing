@@ -36,6 +36,9 @@ namespace TubeRace
     /// </summary>
     public class Bike : MonoBehaviour
     {
+        [SerializeField] private AnimationCurve collisionVolumeCurve;
+        [SerializeField] private AudioSource collisionSfx;
+        
         public class BikeStatistics
         {
             public float TopSpeed;
@@ -236,6 +239,9 @@ namespace TubeRace
             {
                 Heat();
 
+                collisionSfx.volume = collisionVolumeCurve.Evaluate(NormalizedVelocity());
+                collisionSfx.Play();
+                
                 Velocity = -Velocity * initial.bounceFactor;
                 ds = Velocity * dt;
             }

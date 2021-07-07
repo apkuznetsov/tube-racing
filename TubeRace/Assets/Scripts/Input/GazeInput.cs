@@ -1,9 +1,8 @@
-﻿using Vr;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace TubeRace
 {
-    public class GazeInput : Input
+    public class GazeInput : NewInput
     {
         [SerializeField] private NavigationPanel navigationPanel;
 

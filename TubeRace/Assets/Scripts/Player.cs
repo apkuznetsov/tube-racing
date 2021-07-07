@@ -1,4 +1,3 @@
-using Vr;
 using UnityEngine;
 
 namespace TubeRace
@@ -8,11 +7,7 @@ namespace TubeRace
     /// </summary>
     public class Player : MonoBehaviour
     {
-        [SerializeField] private Input input;
-
-        [SerializeField] private NavigationPanel navigationPanel;
-
-        [SerializeField] private string nickname;
+        [SerializeField] private NewInput newInput;
 
         [SerializeField] private Bike activeBike;
 
@@ -21,12 +16,12 @@ namespace TubeRace
             if (!activeBike.IsMovementControlsActive)
                 return;
 
-            Vector3 direction = input.MoveDirection();
+            Vector3 direction = newInput.MoveDirection();
 
             activeBike.SetForwardThrustAxis(direction.y);
             activeBike.SetHorizontalThrustAxis(direction.x);
 
-            activeBike.EnableAfterburner = input.EnableAfterburner();
+            activeBike.EnableAfterburner = newInput.EnableAfterburner();
         }
 
         private void Update()

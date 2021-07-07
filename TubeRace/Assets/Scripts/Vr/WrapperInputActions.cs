@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
-namespace Vr
+namespace TubeRace
 {
     public class @WrapperInputActions : IInputActionCollection, IDisposable
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Vr
+namespace TubeRace
 {
     public class Lever : ControlDevice
     {

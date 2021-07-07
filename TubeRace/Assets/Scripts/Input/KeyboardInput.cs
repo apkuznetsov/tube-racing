@@ -2,7 +2,7 @@
 
 namespace TubeRace
 {
-    public class KeyboardInput : Input
+    public class KeyboardInput : NewInput
     {
         public override Vector3 MoveDirection()
         {
