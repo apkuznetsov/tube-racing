@@ -14,12 +14,12 @@ namespace TubeRace
         
         private void UpdateEngineSoundSimple()
         {
-            Update();
+            engineSource.pitch = 1.0f + pitchVelocityModifier * bike.NormalizedVelocity();
         }
 
         private void Update()
         {
-            engineSource.pitch = 1.0f + pitchVelocityModifier * bike.NormalizedVelocity();
+            UpdateEngineSoundSimple();
         }
     }
 }
