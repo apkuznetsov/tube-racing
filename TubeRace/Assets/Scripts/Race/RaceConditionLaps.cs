@@ -6,7 +6,7 @@ namespace TubeRace
     {
         [SerializeField] private RaceController raceController;
 
-        private void Update()
+        private void UpdateConditionLaps()
         {
             if (!raceController.IsRaceActive && IsTriggered)
                 return;
@@ -20,6 +20,11 @@ namespace TubeRace
             }
 
             IsTriggered = true;
+        }
+
+        private void Update()
+        {
+            UpdateConditionLaps();
         }
     }
 }
