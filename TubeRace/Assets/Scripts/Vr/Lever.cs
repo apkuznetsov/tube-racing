@@ -8,12 +8,17 @@ namespace TubeRace
         [SerializeField] private Transform thisRotationAxis;
         [SerializeField] private float speed;
 
-        protected override void Movement(HandController hand)
+        protected override void UpdateMovement(HandController hand)
         {
             Vector3 handDeltaS = hand.DeltaS();
-            float moveCoeff = Vector3.Dot(thisMoveDirection.forward, handDeltaS);
 
-            transform.rotation *= Quaternion.AngleAxis(moveCoeff * speed * Time.deltaTime, thisRotationAxis.forward);
+            float moveCoeff = Vector3.Dot(
+                thisMoveDirection.forward,
+                handDeltaS);
+
+            transform.rotation *= Quaternion.AngleAxis(
+                moveCoeff * speed * Time.deltaTime,
+                thisRotationAxis.forward);
         }
     }
 }

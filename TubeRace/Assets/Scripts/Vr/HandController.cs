@@ -16,14 +16,12 @@ namespace TubeRace
         WrapperInputActions.IXRILeftHandActions
     {
         [SerializeField] private HandType handType;
+
         private Transform thisTransform;
         private WrapperInputActions inputActions;
 
-        private Vector3 inputPosition;
-        public Vector3 InputPosition => inputPosition;
-
-        private Quaternion inputRotation;
-        public Quaternion InputRotation => inputRotation;
+        private Vector3 InputPosition { get; set; }
+        private Quaternion InputRotation { get; set; }
 
         private float inputSelect;
 
@@ -32,45 +30,9 @@ namespace TubeRace
 
         private ControlDevice pickedDevice;
 
-        public void OnPosition(InputAction.CallbackContext context)
-        {
-            if (lastFramePosition == Vector3.zero)
-                lastFramePosition = inputPosition;
-
-            lastFramePosition = inputPosition;
-            inputPosition = context.ReadValue<Vector3>();
-        }
-
-        public void OnRotation(InputAction.CallbackContext context)
-        {
-            inputRotation = context.ReadValue<Quaternion>();
-        }
-
-        public void OnSelect(InputAction.CallbackContext context)
-        {
-            inputSelect = context.ReadValue<float>();
-
-            if (pickedDevice && inputSelect == 0)
-            {
-                ReleaseDevice();
-            }
-        }
-
-        private void OnTriggerStay(Collider other)
-        {
-            if (pickedDevice != null)
-                return;
-
-            if (other.gameObject.CompareTag("ControlDevice") && inputSelect > 0)
-            {
-                ControlDevice controlDevice = other.GetComponentInParent<ControlDevice>();
-                PickupDevice(controlDevice);
-            }
-        }
-
         public Vector3 DeltaS()
         {
-            return inputPosition - lastFramePosition;
+            return InputPosition - lastFramePosition;
         }
 
         private void PickupDevice(ControlDevice device)
@@ -85,6 +47,40 @@ namespace TubeRace
             canUpdatePositionAndRotation = true;
             pickedDevice.StopMovement();
             pickedDevice = null;
+        }
+
+        public void OnPosition(InputAction.CallbackContext context)
+        {
+            if (lastFramePosition == Vector3.zero)
+                lastFramePosition = InputPosition;
+
+            lastFramePosition = InputPosition;
+            InputPosition = context.ReadValue<Vector3>();
+        }
+
+        public void OnRotation(InputAction.CallbackContext context)
+        {
+            InputRotation = context.ReadValue<Quaternion>();
+        }
+
+        public void OnSelect(InputAction.CallbackContext context)
+        {
+            inputSelect = context.ReadValue<float>();
+
+            if (pickedDevice && inputSelect == 0)
+                ReleaseDevice();
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (pickedDevice != null)
+                return;
+
+            if (other.gameObject.CompareTag("ControlDevice") && inputSelect > 0)
+            {
+                ControlDevice controlDevice = other.GetComponentInParent<ControlDevice>();
+                PickupDevice(controlDevice);
+            }
         }
 
         private void Awake()
@@ -119,8 +115,8 @@ namespace TubeRace
             if (!canUpdatePositionAndRotation)
                 return;
 
-            thisTransform.localPosition = inputPosition;
-            thisTransform.localRotation = inputRotation;
+            thisTransform.localPosition = InputPosition;
+            thisTransform.localRotation = InputRotation;
         }
     }
 }
