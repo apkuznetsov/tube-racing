@@ -4,13 +4,13 @@ namespace TubeRace
 {
     public class GazePointer : MonoBehaviour
     {
-        [SerializeField] private Camera cam;
+        [SerializeField] private Camera thisCamera;
         [Range(1, 50)] [SerializeField] private float gazeRange;
 
         public Vector3 DirectionRelativePlane(Vector3 planePosition)
         {
-            Transform camTransform = cam.transform;
-            Ray ray = new Ray(camTransform.position, camTransform.forward);
+            Transform transformCamera = thisCamera.transform;
+            Ray ray = new Ray(transformCamera.position, transformCamera.forward);
 
             bool isCollision = Physics.Raycast(
                 ray, out RaycastHit rayHit,
@@ -22,8 +22,8 @@ namespace TubeRace
             {
                 Vector3 hitPosition = rayHit.point;
                 Debug.DrawLine(transform.position, hitPosition);
-                Vector3 relativePanel = hitPosition - planePosition;
 
+                Vector3 relativePanel = hitPosition - planePosition;
                 return relativePanel;
             }
 

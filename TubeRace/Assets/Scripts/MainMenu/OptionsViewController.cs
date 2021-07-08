@@ -13,16 +13,6 @@ namespace TubeRace
         private readonly int[] width = {1920, 1366, 1440};
         private readonly int[] height = {1080, 768, 900};
 
-        private void Awake()
-        {
-            gameObject.SetActive(false);
-
-            InitDropdownOptions();
-
-            dropdown.value = 0;
-            SetScreenResolution();
-        }
-
         private void InitDropdownOptions()
         {
             for (int i = 0; i < height.Length; i++)
@@ -39,17 +29,25 @@ namespace TubeRace
         private void SetScreenResolution()
         {
             int option = dropdown.value;
-            Debug.Log("DROPDOWN VALUE ... " + option);
             Screen.SetResolution(width[option], height[option], isFullScreen);
         }
 
         public void OnButtonExit()
         {
             SetScreenResolution();
-            Debug.Log("SCREEN RESOLUTION CHANGED");
 
             gameObject.SetActive(false);
             mainMenuViewController.gameObject.SetActive(true);
+        }
+
+        private void Awake()
+        {
+            gameObject.SetActive(false);
+
+            InitDropdownOptions();
+            dropdown.value = 0;
+
+            SetScreenResolution();
         }
     }
 }

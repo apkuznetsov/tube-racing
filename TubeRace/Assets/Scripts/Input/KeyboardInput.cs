@@ -8,16 +8,16 @@ namespace TubeRace
         {
             Vector3 direction = new Vector3();
 
-            if (UnityEngine.Input.GetKey(KeyCode.W))
+            if (Input.GetKey(KeyCode.W))
                 direction.y = 1;
 
-            if (UnityEngine.Input.GetKey(KeyCode.S))
+            if (Input.GetKey(KeyCode.S))
                 direction.y = -1;
 
-            if (UnityEngine.Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.A))
                 direction.x = -1;
 
-            if (UnityEngine.Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.D))
                 direction.x = 1;
 
             return direction;
@@ -25,7 +25,7 @@ namespace TubeRace
 
         public override bool EnableAfterburner()
         {
-            return UnityEngine.Input.GetKey(KeyCode.Space);
+            return Input.GetKey(KeyCode.Space);
         }
     }
 }

@@ -5,7 +5,6 @@ namespace TubeRace
     public abstract class Powerup : MonoBehaviour
     {
         [SerializeField] private Track track;
-
         [SerializeField] private float distance;
         [SerializeField] private float angle;
 
@@ -17,7 +16,7 @@ namespace TubeRace
             Vector3 trackPosition = track.Position(distance);
 
             Quaternion quater = Quaternion.AngleAxis(angle, Vector3.forward);
-            Vector3 trackOffset = quater * (Vector3.up * (0));
+            Vector3 trackOffset = quater * (Vector3.up * 0);
 
             transform.position = trackPosition - trackOffset;
             transform.rotation = Quaternion.LookRotation(obstacleDir, trackOffset);
@@ -25,7 +24,7 @@ namespace TubeRace
 
         private void UpdateBikes()
         {
-            foreach (GameObject bikeGo in Bike.GameObjects)
+            foreach (GameObject bikeGo in Bike.BikesAsGameObjects)
             {
                 Bike bike = bikeGo.GetComponent<Bike>();
 

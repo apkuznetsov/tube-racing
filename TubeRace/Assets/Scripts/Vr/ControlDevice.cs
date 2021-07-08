@@ -16,14 +16,14 @@ namespace TubeRace
             handController = null;
         }
 
-        protected abstract void Movement(HandController hand);
+        protected abstract void UpdateMovement(HandController hand);
 
         private void Update()
         {
             if (handController == null)
                 return;
 
-            Movement(handController);
+            UpdateMovement(handController);
         }
     }
 }

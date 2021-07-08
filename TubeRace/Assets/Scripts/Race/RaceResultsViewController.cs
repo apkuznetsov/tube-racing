@@ -1,5 +1,6 @@
 using System.Globalization;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace TubeRace
@@ -7,30 +8,28 @@ namespace TubeRace
     public class RaceResultsViewController : MonoBehaviour
     {
         [SerializeField] private Text place;
-        [SerializeField] private Text topSpeed;
-        [SerializeField] private Text totalTime;
-        [SerializeField] private Text bestTime;
-
-        private void Awake()
-        {
-            gameObject.SetActive(false);
-        }
+        [SerializeField] private Text topVelocity;
+        [SerializeField] private Text totalSeconds;
+        [SerializeField] private Text bestSeconds;
 
         public void Show(Bike.BikeStatistics stats)
         {
             gameObject.SetActive(true);
 
-            place.text = "Place: " + stats.Place;
-            topSpeed.text = "Top speed: " + ((int) stats.TopSpeed) + " m/s";
-            totalTime.text = "Time: " + stats.TotalTime.ToString(CultureInfo.CurrentCulture) + " seconds";
-            bestTime.text = "Best lap: " + stats.BestTime.ToString(CultureInfo.CurrentCulture) + " seconds";
+            place.text = "Place: " + stats.RacePlace;
+            topVelocity.text = "Top speed: " + ((int) stats.BestVelocity) + " m/s";
+            totalSeconds.text = "Time: " + stats.TotalSeconds.ToString(CultureInfo.CurrentCulture) + " seconds";
+            bestSeconds.text = "Best lap: " + stats.BestSeconds.ToString(CultureInfo.CurrentCulture) + " seconds";
         }
 
         public void OnButtonQuit()
         {
-            UnityEngine.
-                SceneManagement.SceneManager.
-                LoadScene(PauseViewController.MainMenuScene);
+            SceneManager.LoadScene(PauseViewController.MainMenuScene);
+        }
+
+        private void Awake()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

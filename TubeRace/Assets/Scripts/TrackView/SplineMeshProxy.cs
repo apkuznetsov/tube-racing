@@ -26,8 +26,6 @@ namespace TubeRace
     [RequireComponent(typeof(Spline))]
     public class SplineMeshProxy : MonoBehaviour
     {
-        [SerializeField] private TrackСlosedBezierCurve trackBezier;
-
         [SerializeField] private BezierTrackPoint pointA;
         [SerializeField] private BezierTrackPoint pointB;
         private Spline spline;
@@ -36,19 +34,19 @@ namespace TubeRace
         {
             spline = GetComponent<Spline>();
 
-            SplineNode node0 = spline.nodes[0];
+            SplineNode nodeA = spline.nodes[0];
             Transform transformA = pointA.transform;
             Vector3 positionA = transformA.position;
 
-            node0.Position = positionA;
-            node0.Direction = positionA + transformA.forward * pointA.Length;
+            nodeA.Position = positionA;
+            nodeA.Direction = positionA + transformA.forward * pointA.Length;
 
-            SplineNode node1 = spline.nodes[1];
+            SplineNode nodeB = spline.nodes[1];
             Transform transformB = pointB.transform;
             Vector3 positionB = transformB.position;
 
-            node1.Position = positionB;
-            node1.Direction = positionB + transformB.forward * pointB.Length;
+            nodeB.Position = positionB;
+            nodeB.Direction = positionB + transformB.forward * pointB.Length;
         }
     }
 }

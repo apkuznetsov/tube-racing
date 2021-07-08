@@ -8,7 +8,6 @@ using UnityEditor;
 namespace TubeRace
 {
 #if UNITY_EDITOR
-
     [CustomEditor(typeof(TrackCircle))]
     public class RaceTrackRoundEditor : Editor
     {
@@ -27,7 +26,6 @@ namespace TubeRace
     public class TrackCircle : Track
     {
         [SerializeField] private float circleRadius;
-
         [SerializeField] private int division;
 
         [SerializeField] private Quaternion[] trackSampledRotations;
@@ -50,6 +48,7 @@ namespace TubeRace
             for (int i = 0; i < trackSampledSegmentLengths.Length; i++)
             {
                 float diff = distance - trackSampledSegmentLengths[i];
+
                 if (diff < 0)
                 {
                     float t = distance / trackSampledSegmentLengths[i];
@@ -101,47 +100,13 @@ namespace TubeRace
             return Quaternion.identity;
         }
 
-        public void GenerateTrackData()
+        private static Quaternion GenerateRotation(Vector3 a, Vector3 b, float t)
         {
-            Debug.Log("Generating track data");
+            Vector3 dir = (b - a).normalized;
+            Vector3 up = Vector3.Lerp(a, b, t);
 
-            var points = new List<Vector3>();
-            var rotations = new List<Quaternion>();
-
-            float divsionf = division;
-            for (int i = 0; i < division; i++)
-            {
-                float angle = 2.0f * Mathf.PI * i / divsionf;
-                Vector3 newPoints = new Vector3(
-                    Mathf.Cos(angle) * circleRadius, 0, Mathf.Sin(angle) * circleRadius);
-
-                points.Add(newPoints);
-            }
-
-            trackSampledPoints = points.ToArray();
-            
-            rotations.AddRange(GenerateRotations(trackSampledPoints));
-            trackSampledRotations = rotations.ToArray();
-            
-            trackSampledSegmentLengths = new float[trackSampledPoints.Length - 1];
-            trackSampledLength = 0;
-
-            for (int i = 0; i < trackSampledPoints.Length - 1; i++)
-            {
-                Vector3 a = trackSampledPoints[i];
-                Vector3 b = trackSampledPoints[i + 1];
-
-                float segmentLength = (b - a).magnitude;
-                trackSampledSegmentLengths[i] = segmentLength;
-                trackSampledLength += segmentLength;
-            }
-
-            EditorUtility.SetDirty(this);
-        }
-
-        private void DrawSampledTrackPoints()
-        {
-            Handles.DrawAAPolyLine(trackSampledPoints);
+            Quaternion rotation = Quaternion.LookRotation(dir, up);
+            return rotation;
         }
 
         private static IEnumerable<Quaternion> GenerateRotations(IReadOnlyList<Vector3> points)
@@ -161,13 +126,46 @@ namespace TubeRace
             return rotations.ToArray();
         }
 
-        private static Quaternion GenerateRotation(Vector3 a, Vector3 b, float t)
+        public void GenerateTrackData()
         {
-            Vector3 dir = (b - a).normalized;
-            Vector3 up = Vector3.Lerp(a, b, t);
+            Debug.Log("Generating track data");
 
-            Quaternion rotation = Quaternion.LookRotation(dir, up);
-            return rotation;
+            var points = new List<Vector3>();
+            var rotations = new List<Quaternion>();
+
+            float divsionf = division;
+            for (int i = 0; i < division; i++)
+            {
+                float angle = 2.0f * Mathf.PI * i / divsionf;
+                Vector3 newPoints = new Vector3(
+                    Mathf.Cos(angle) * circleRadius, 0, Mathf.Sin(angle) * circleRadius);
+
+                points.Add(newPoints);
+            }
+
+            trackSampledPoints = points.ToArray();
+            rotations.AddRange(GenerateRotations(trackSampledPoints));
+            trackSampledRotations = rotations.ToArray();
+
+            trackSampledSegmentLengths = new float[trackSampledPoints.Length - 1];
+            trackSampledLength = 0;
+
+            for (int i = 0; i < trackSampledPoints.Length - 1; i++)
+            {
+                Vector3 a = trackSampledPoints[i];
+                Vector3 b = trackSampledPoints[i + 1];
+
+                float segmentLength = (b - a).magnitude;
+                trackSampledSegmentLengths[i] = segmentLength;
+                trackSampledLength += segmentLength;
+            }
+
+            EditorUtility.SetDirty(this);
+        }
+
+        private void DrawSampledTrackPoints()
+        {
+            Handles.DrawAAPolyLine(trackSampledPoints);
         }
 
         private void DrawCircleGizmos()

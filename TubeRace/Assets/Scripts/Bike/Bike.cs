@@ -4,14 +4,9 @@ using UnityEngine;
 
 namespace TubeRace
 {
-    /// <summary>
-    /// Data model
-    /// </summary>
     [Serializable]
     public class BikeParametersInitial
     {
-        [Range(0.0f, 10.0f)] public float mass;
-
         [Range(100.0f, 1000.0f)] public float maxVelocity;
         [Range(0.0f, 100.0f)] public float thrust;
         [Range(0.0f, 1.0f)] public float bounceFactor;
@@ -26,142 +21,51 @@ namespace TubeRace
         public float afterburnerCoolSpeed;
         public float afterburnerHeatSpeed;
         public float afterburnerMaxHeat;
-
-        public GameObject engineModel;
-        public GameObject hullModel;
     }
 
-    /// <summary>
-    /// Controller. Entity
-    /// </summary>
     public class Bike : MonoBehaviour
     {
-        [SerializeField] private AnimationCurve collisionVolumeCurve;
-        [SerializeField] private AudioSource collisionSfx;
-        
-        public class BikeStatistics
-        {
-            public float TopSpeed;
-            public float TotalTime;
-            public float BestTime;
-            public int Place;
-        }
-
-        public BikeStatistics Statistics { get; private set; }
-
-        private List<float> lapDurations;
-        private int lap;
-        private float lapStartTime;
-
-        private void Awake()
-        {
-            Statistics = new BikeStatistics();
-            lapDurations = new List<float>();
-        }
-
-        private float raceStartTime;
-
-        public void OnRaceStart()
-        {
-            Statistics.Place = 0;
-            Statistics.TotalTime = 0;
-            Statistics.BestTime = 0;
-
-            raceStartTime = Time.time;
-            lapStartTime = raceStartTime;
-        }
-
-        public void OnRaceEnd()
-        {
-            Statistics.TotalTime = Time.time - raceStartTime;
-        }
-
         private const string Tag = "Bike";
+        public static GameObject[] BikesAsGameObjects;
 
-        public static GameObject[] GameObjects;
-
-        /// <summary>
-        /// Data model
-        /// </summary>
-        [SerializeField] private BikeParametersInitial initial;
-
-        /// <summary>
-        /// View
-        /// </summary>
-        [SerializeField] private BikeViewController visualController;
+        #region Сериализуемые поля
 
         [SerializeField] private Track track;
+        public Track Track => track;
+
+        [SerializeField] private AudioSource collisionSfx;
+        [SerializeField] private AnimationCurve collisionVolumeCurve;
 
         [SerializeField] private bool isPlayerBike;
         public bool IsPlayerBike => isPlayerBike;
 
+        [SerializeField] private BikeParametersInitial initial;
+
+        #endregion
+
+        #region Управление
+
         public bool IsMovementControlsActive { get; set; }
 
-        private float afterburnerHeat;
-        private float angularVelocity;
-
-        /// <summary>
-        /// Управление газом. Нормализованное. От -1 до +1
-        /// </summary>
         private float forwardThrustAxis;
 
-        /// <summary>
-        /// Управление отклонением влево и вправо. Нормализованное. От -1 до +1
-        /// </summary>
-        private float horizontalThrustAxis;
-
-        public Track Track => track;
-
-        public float Fuel { get; private set; }
-
-        public float Distance { get; private set; }
-        public float PrevDistance { get; private set; }
-
-        public float Velocity { get; private set; }
-
-        public float Angle { get; private set; }
-
-        /// <summary>
-        /// Вкл/выкл доп. ускорителя
-        /// </summary>
-        public bool EnableAfterburner { get; set; }
-
-        public float NormalizedHeat
-        {
-            get
-            {
-                if (initial.afterburnerMaxHeat > 0)
-                    return afterburnerHeat / initial.afterburnerMaxHeat;
-
-                return 0.0f;
-            }
-        }
-
-        private void Start()
-        {
-            GameObjects = GameObject.FindGameObjectsWithTag(Tag);
-        }
-
-        private void Update()
-        {
-            UpdateAfterburnerHeat();
-            UpdateBikePhysics();
-            UpdateBestTime();
-        }
-
-        /// <summary>
-        /// Установка значения педали газа
-        /// </summary>
-        /// <param name="val"></param>
         public void SetForwardThrustAxis(float val)
         {
             forwardThrustAxis = val;
         }
 
+        private float horizontalThrustAxis;
+
         public void SetHorizontalThrustAxis(float val)
         {
             horizontalThrustAxis = val;
         }
+
+        #endregion
+
+        #region Топливо
+
+        public float Fuel { get; private set; }
 
         public void AddFuel(float amount)
         {
@@ -178,9 +82,15 @@ namespace TubeRace
             return true;
         }
 
-        public void CoolAfterburner()
+        #endregion
+
+        #region Скорости
+
+        public float Velocity { get; private set; }
+
+        public float NormalizedVelocity()
         {
-            afterburnerHeat = 0;
+            return Mathf.Clamp01(Velocity / initial.maxVelocity);
         }
 
         public void Slowdown(int percent)
@@ -188,12 +98,84 @@ namespace TubeRace
             Velocity -= Velocity * percent / 100.0f;
         }
 
-        private void Heat()
+        public float Angle { get; private set; }
+        private float angularVelocity;
+
+        #endregion
+
+        #region Форсаж
+
+        public bool EnableAfterburner { get; set; }
+        private float afterburnerHeat;
+
+        public float NormalizedHeat
+        {
+            get
+            {
+                if (initial.afterburnerMaxHeat > 0)
+                    return afterburnerHeat / initial.afterburnerMaxHeat;
+
+                return 0.0f;
+            }
+        }
+
+        private void HeatAfterburner()
         {
             afterburnerHeat += Velocity;
         }
 
-        private void UpdateAfterburnerHeat()
+        public void CoolAfterburner()
+        {
+            afterburnerHeat = 0;
+        }
+
+        #endregion
+
+        #region Статистика
+
+        public class BikeStatistics
+        {
+            public int RacePlace;
+            public float BestVelocity;
+            public float BestSeconds;
+            public float TotalSeconds;
+        }
+
+        public BikeStatistics Stats { get; private set; }
+
+        private float raceStartTime;
+
+        private int lapNum;
+        private List<float> lapDurations;
+        private float lapStartTime;
+
+        public float Distance { get; private set; }
+        public float PrevDistance { get; private set; }
+
+        #endregion
+
+        #region Гонка
+
+        public void OnRaceStart()
+        {
+            Stats.RacePlace = 0;
+            Stats.BestSeconds = 0;
+            Stats.TotalSeconds = 0;
+
+            raceStartTime = Time.time;
+            lapStartTime = raceStartTime;
+        }
+
+        public void OnRaceEnd()
+        {
+            Stats.TotalSeconds = Time.time - raceStartTime;
+        }
+
+        #endregion
+
+        #region Обновления
+
+        private void UpdateHeat()
         {
             afterburnerHeat -= initial.afterburnerCoolSpeed * Time.deltaTime;
 
@@ -204,12 +186,7 @@ namespace TubeRace
                 Slowdown(100);
         }
 
-        public float NormalizedVelocity()
-        {
-            return Mathf.Clamp01(Velocity / initial.maxVelocity);
-        }
-
-        private void UpdateBikeVelocity()
+        private void UpdateVelocity()
         {
             float dt = Time.deltaTime;
 
@@ -231,17 +208,17 @@ namespace TubeRace
             force += forceDrag;
 
             Velocity += force * dt;
-            if (Statistics.TopSpeed < Mathf.Abs(Velocity))
-                Statistics.TopSpeed = Mathf.Abs(Velocity);
+            if (Stats.BestVelocity < Mathf.Abs(Velocity))
+                Stats.BestVelocity = Mathf.Abs(Velocity);
 
             float ds = Velocity * dt;
             if (Physics.Raycast(transform.position, transform.forward, ds))
             {
-                Heat();
+                HeatAfterburner();
 
                 collisionSfx.volume = collisionVolumeCurve.Evaluate(NormalizedVelocity());
                 collisionSfx.Play();
-                
+
                 Velocity = -Velocity * initial.bounceFactor;
                 ds = Velocity * dt;
             }
@@ -250,7 +227,7 @@ namespace TubeRace
             Distance += ds;
         }
 
-        private void UpdateBikeAngle()
+        private void UpdateAngle()
         {
             float dt = Time.deltaTime;
             angularVelocity += horizontalThrustAxis * initial.angularThrust;
@@ -266,10 +243,10 @@ namespace TubeRace
                 -initial.maxAngularVelocity, initial.maxAngularVelocity);
         }
 
-        private void UpdateBikePhysics()
+        private void UpdatePhysics()
         {
-            UpdateBikeVelocity();
-            UpdateBikeAngle();
+            UpdateVelocity();
+            UpdateAngle();
 
             if (Distance < 0)
                 Distance = 0;
@@ -284,17 +261,41 @@ namespace TubeRace
         private void UpdateBestTime()
         {
             int currLap = (int) (Distance / track.Length()) + 1;
-            if (currLap <= lap)
+            if (currLap <= lapNum)
                 return;
 
             float lapDuration = Time.time - lapStartTime;
             lapStartTime = Time.time;
 
             lapDurations.Add(lapDuration);
-            lap++;
+            lapNum++;
 
-            if (lapDuration > Statistics.BestTime)
-                Statistics.BestTime = lapDuration;
+            if (lapDuration > Stats.BestSeconds)
+                Stats.BestSeconds = lapDuration;
         }
+
+        #endregion
+
+        #region Юнити
+
+        private void Awake()
+        {
+            Stats = new BikeStatistics();
+            lapDurations = new List<float>();
+        }
+
+        private void Start()
+        {
+            BikesAsGameObjects = GameObject.FindGameObjectsWithTag(Tag);
+        }
+
+        private void Update()
+        {
+            UpdateHeat();
+            UpdatePhysics();
+            UpdateBestTime();
+        }
+
+        #endregion
     }
 }

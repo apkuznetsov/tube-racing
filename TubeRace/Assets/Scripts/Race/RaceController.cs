@@ -4,40 +4,35 @@ using UnityEngine.Events;
 
 namespace TubeRace
 {
+    public enum RaceMode
+    {
+        Laps,
+        Time,
+        LastStanding
+    }
+
     public class RaceController : MonoBehaviour
     {
-        [SerializeField] private Track track;
-
         [SerializeField] private RaceResultsViewController raceResultsViewController;
-
-        [SerializeField] private int maxLaps;
-        public int MaxLaps => maxLaps;
-
-        private enum RaceMode
-        {
-            Laps,
-            Time,
-            LastStanding
-        }
-
-        [SerializeField] private RaceMode raceMode;
-
-        [SerializeField] private UnityEvent eventRaceStart;
-        [SerializeField] private UnityEvent eventRaceFinished;
-
-        [SerializeField] private int countdownTimer;
-        public int CountdownTimer => countdownTimer;
-
-        public float CountTimer { get; private set; }
+        [SerializeField] private Track track;
 
         [SerializeField] private Bike[] bikes;
         private List<Bike> activeBikes;
         private List<Bike> finishedBikes;
         public IEnumerable<Bike> Bikes => bikes;
 
+        [SerializeField] private RaceMode raceMode;
+        [SerializeField] private RaceCondition[] conditions;
+
+        [SerializeField] private UnityEvent eventRaceStart;
+        [SerializeField] private UnityEvent eventRaceFinished;
         public bool IsRaceActive { get; private set; }
 
-        [SerializeField] private RaceCondition[] conditions;
+        [SerializeField] private int maxLaps;
+        public int MaxLaps => maxLaps;
+
+        [SerializeField] private int countdownTimer;
+        public float CountTimer { get; private set; }
 
         private void StartRace()
         {
@@ -45,14 +40,13 @@ namespace TubeRace
             finishedBikes = new List<Bike>();
 
             IsRaceActive = true;
-
             CountTimer = countdownTimer;
 
-            foreach (RaceCondition c in conditions)
-                c.OnRaceStart();
+            foreach (RaceCondition condition in conditions)
+                condition.OnRaceStart();
 
-            foreach (Bike b in bikes)
-                b.OnRaceStart();
+            foreach (Bike bike in bikes)
+                bike.OnRaceStart();
 
             eventRaceStart?.Invoke();
         }
@@ -67,9 +61,40 @@ namespace TubeRace
             eventRaceFinished?.Invoke();
         }
 
-        private void Start()
+        private void UpdatePositions()
         {
-            StartRace();
+            foreach (Bike bike in activeBikes)
+            {
+                if (finishedBikes.Contains(bike))
+                    continue;
+
+                float currDistance = bike.Distance;
+                float totalRaceDistance = maxLaps * track.Length();
+
+                if (currDistance > totalRaceDistance)
+                {
+                    finishedBikes.Add(bike);
+                    bike.Stats.RacePlace = finishedBikes.Count;
+                    bike.OnRaceEnd();
+
+                    if (bike.IsPlayerBike)
+                        raceResultsViewController.Show(bike.Stats);
+                }
+            }
+        }
+
+        private void UpdatePrestart()
+        {
+            if (CountTimer > 0)
+            {
+                CountTimer -= Time.deltaTime;
+
+                if (CountTimer <= 0)
+                {
+                    foreach (Bike bike in bikes)
+                        bike.IsMovementControlsActive = true;
+                }
+            }
         }
 
         private void UpdateConditions()
@@ -86,48 +111,10 @@ namespace TubeRace
             EndRace();
         }
 
-        private void UpdateRacePrestart()
+
+        private void Start()
         {
-            if (CountTimer > 0)
-            {
-                CountTimer -= Time.deltaTime;
-
-                if (CountTimer <= 0)
-                {
-                    foreach (Bike bike in bikes)
-                        bike.IsMovementControlsActive = true;
-                }
-            }
-        }
-
-        private void UpdateBikeRacePositions()
-        {
-            // if (activeBikes.Count == 0)
-            // {
-            //     EndRace();
-            //     return;
-            // }
-
-            foreach (Bike bike in activeBikes)
-            {
-                if (finishedBikes.Contains(bike))
-                    continue;
-
-                float currDistance = bike.Distance;
-                float totalRaceDistance = maxLaps * track.Length();
-
-                if (currDistance > totalRaceDistance)
-                {
-                    finishedBikes.Add(bike);
-                    bike.Statistics.Place = finishedBikes.Count;
-                    bike.OnRaceEnd();
-
-                    if (bike.IsPlayerBike)
-                    {
-                        raceResultsViewController.Show(bike.Statistics);
-                    }
-                }
-            }
+            StartRace();
         }
 
         private void Update()
@@ -135,8 +122,8 @@ namespace TubeRace
             if (!IsRaceActive)
                 return;
 
-            UpdateBikeRacePositions();
-            UpdateRacePrestart();
+            UpdatePositions();
+            UpdatePrestart();
             UpdateConditions();
         }
     }

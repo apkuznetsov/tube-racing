@@ -7,9 +7,19 @@ namespace TubeRace
     {
         public const string MainMenuScene = "MainMenuScene";
 
+        [SerializeField] private RaceController raceController;
         [SerializeField] private RectTransform content;
 
-        [SerializeField] private RaceController raceController;
+        public void OnButtonContinue()
+        {
+            Time.timeScale = 1;
+            content.gameObject.SetActive(false);
+        }
+
+        public void OnButtonEndRace()
+        {
+            SceneManager.LoadScene(MainMenuScene);
+        }
 
         private void Start()
         {
@@ -18,31 +28,17 @@ namespace TubeRace
 
         private void Update()
         {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (raceController.IsRaceActive)
                 {
-                    GameObject go;
-                    (go = content.gameObject).SetActive(!content.gameObject.activeInHierarchy);
-                    UpdateGameActivity(!go.activeInHierarchy);
+                    GameObject go = content.gameObject;
+                    go.SetActive(!go.activeInHierarchy);
+
+                    bool canUpdate = !go.activeInHierarchy;
+                    Time.timeScale = canUpdate ? 1 : 0;
                 }
             }
-        }
-
-        private void UpdateGameActivity(bool canUpdate)
-        {
-            Time.timeScale = canUpdate ? 1 : 0;
-        }
-
-        public void OnButtonContinue()
-        {
-            UpdateGameActivity(true);
-            content.gameObject.SetActive(false);
-        }
-
-        public void OnButtonEndRace()
-        {
-            SceneManager.LoadScene(MainMenuScene);
         }
     }
 }

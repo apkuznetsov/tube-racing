@@ -14,9 +14,7 @@ namespace TubeRace
             relPos = Vector3.ClampMagnitude(relPos, maxRadius);
 
             if (relPos.magnitude < deadZoneRadius)
-            {
                 relPos = Vector3.zero;
-            }
 
             relPos = new Vector3(
                 Vector3.Dot(transform.right, relPos),

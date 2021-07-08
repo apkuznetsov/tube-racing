@@ -2,9 +2,6 @@ using UnityEngine;
 
 namespace TubeRace
 {
-    /// <summary>
-    /// Класс линейного трека
-    /// </summary>
     public class TrackLine : Track
     {
         [Header("Linear track properties")] [SerializeField]
@@ -35,7 +32,6 @@ namespace TubeRace
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
-
             Gizmos.DrawLine(start.position, end.position);
         }
     }
