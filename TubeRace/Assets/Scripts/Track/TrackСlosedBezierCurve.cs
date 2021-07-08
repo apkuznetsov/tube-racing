@@ -38,12 +38,6 @@ namespace TubeRace
         [SerializeField] private bool debugDrawBezier;
         [SerializeField] private bool debugDrawSampledPoints;
 
-        private void Awake()
-        {
-            if (trackDescription != null)
-                trackDescription.SetLength(trackSampledLength);
-        }
-        
         public override float Length()
         {
             return trackSampledLength;
@@ -56,6 +50,7 @@ namespace TubeRace
             for (int i = 0; i < trackSampledSegmentLengths.Length; i++)
             {
                 float diff = distance - trackSampledSegmentLengths[i];
+
                 if (diff < 0)
                 {
                     float t = distance / trackSampledSegmentLengths[i];
@@ -91,6 +86,7 @@ namespace TubeRace
             for (int i = 0; i < trackSampledSegmentLengths.Length; i++)
             {
                 float diff = distance - trackSampledSegmentLengths[i];
+
                 if (diff < 0)
                 {
                     float t = distance / trackSampledSegmentLengths[i];
@@ -105,6 +101,51 @@ namespace TubeRace
             }
 
             return Quaternion.identity;
+        }
+
+        private static IEnumerable<Quaternion> GenerateRotations(
+            Transform a,
+            Transform b,
+            IReadOnlyList<Vector3> points)
+        {
+            var rotations = new List<Quaternion>();
+            float t = 0;
+
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                Vector3 direction = (points[i + 1] - points[i]).normalized;
+                Vector3 up = Vector3.Lerp(a.up, b.up, t);
+
+                Quaternion rotation = Quaternion.LookRotation(direction, up);
+                rotations.Add(rotation);
+
+                t += 1.0f / (points.Count - 1);
+            }
+
+            rotations.Add(b.rotation);
+            return rotations.ToArray();
+        }
+
+        private static Vector3[] GenerateBezierPoints(
+            BezierTrackPoint a,
+            BezierTrackPoint b,
+            int division)
+        {
+            Transform aTransform = a.transform;
+            Transform bTransform = b.transform;
+
+            Vector3 aPosition = aTransform.position;
+            Vector3 bPosition = bTransform.position;
+
+            float aLength = a.Length;
+            float bLength = b.Length;
+
+            return Handles.MakeBezierPoints(
+                aPosition,
+                bPosition,
+                aPosition + aTransform.forward * aLength,
+                bPosition - bTransform.forward * bLength,
+                division);
         }
 
         public void GenerateTrackData()
@@ -159,58 +200,8 @@ namespace TubeRace
 
             if (trackDescription != null)
                 trackDescription.SetLength(trackSampledLength);
-            
+
             EditorUtility.SetDirty(this);
-        }
-
-        private void DrawSampledTrackPoints()
-        {
-            Handles.DrawAAPolyLine(trackSampledPoints);
-        }
-
-        private static IEnumerable<Quaternion> GenerateRotations(
-            Transform a,
-            Transform b,
-            IReadOnlyList<Vector3> points)
-        {
-            var rotations = new List<Quaternion>();
-            float t = 0;
-
-            for (int i = 0; i < points.Count - 1; i++)
-            {
-                Vector3 dir = (points[i + 1] - points[i]).normalized;
-
-                Vector3 up = Vector3.Lerp(a.up, b.up, t);
-                Quaternion rotation = Quaternion.LookRotation(dir, up);
-                rotations.Add(rotation);
-
-                t += 1.0f / (points.Count - 1);
-            }
-
-            rotations.Add(b.rotation);
-            return rotations.ToArray();
-        }
-
-        private static Vector3[] GenerateBezierPoints(
-            BezierTrackPoint a,
-            BezierTrackPoint b,
-            int division)
-        {
-            Transform aTransform = a.transform;
-            Transform bTransform = b.transform;
-
-            Vector3 aPosition = aTransform.position;
-            Vector3 bPosition = bTransform.position;
-
-            float aLength = a.Length;
-            float bLength = b.Length;
-
-            return Handles.MakeBezierPoints(
-                aPosition,
-                bPosition,
-                aPosition + aTransform.forward * aLength,
-                bPosition - bTransform.forward * bLength,
-                division);
         }
 
         private static void DrawTrackPartGizmos(BezierTrackPoint a, BezierTrackPoint b)
@@ -243,6 +234,11 @@ namespace TubeRace
             DrawTrackPartGizmos(trackPoints[trackPoints.Length - 1], trackPoints[0]);
         }
 
+        private void DrawSampledTrackPoints()
+        {
+            Handles.DrawAAPolyLine(trackSampledPoints);
+        }
+
         private void OnDrawGizmos()
         {
             if (debugDrawBezier)
@@ -250,6 +246,12 @@ namespace TubeRace
 
             if (debugDrawSampledPoints)
                 DrawSampledTrackPoints();
+        }
+
+        private void Awake()
+        {
+            if (trackDescription != null)
+                trackDescription.SetLength(trackSampledLength);
         }
     }
 }
