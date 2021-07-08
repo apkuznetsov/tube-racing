@@ -14,13 +14,7 @@ namespace TubeRace
         [SerializeField] private Text labelLength;
         [SerializeField] private GameObject labelImage;
 
-        private void Start()
-        {
-            if (trackDescription != null)
-                SetViewValues(trackDescription);
-        }
-
-        private void SetViewValues(TrackDescription description)
+        private void SetViewFields(TrackDescription description)
         {
             activeDescription = description;
 
@@ -32,6 +26,12 @@ namespace TubeRace
         public void OnButtonStartLevel()
         {
             SceneManager.LoadScene(activeDescription.SceneName);
+        }
+
+        private void Start()
+        {
+            if (trackDescription != null)
+                SetViewFields(trackDescription);
         }
     }
 }
