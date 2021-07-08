@@ -5,51 +5,55 @@ namespace TubeRace
     public class Obstacle : MonoBehaviour
     {
         [SerializeField] private Track track;
-
         [SerializeField] private float distance;
+
         [Range(0.0f, 20.0f)] [SerializeField] private float radiusModifier = 1.0f;
-        [SerializeField] private float rollAngle;
+        [SerializeField] private float angle;
+        [Range(0.0f, 100.0f)] public float angularThrust;
 
-        [Range(0.0f, 100.0f)] public float agility;
-
-        private Vector3 obstacleDir;
+        private Vector3 obstacleDirection;
         private Vector3 trackPosition;
 
         private Quaternion quater;
         private Vector3 trackOffset;
 
-        private void SetPosition()
+        private void UpdateAngle()
         {
-            quater = Quaternion.AngleAxis(rollAngle, Vector3.forward);
+            angle += angularThrust * Time.deltaTime;
+            if (angle > 180.0f)
+                angle -= 360.0f;
+            else if (angle < -180.0f)
+                angle = 360.0f + angle;
+        }
+
+        private void UpdatePosition()
+        {
+            quater = Quaternion.AngleAxis(angle, Vector3.forward);
             trackOffset = quater * (Vector3.up * (radiusModifier * track.Radius));
 
             transform.position = trackPosition - trackOffset;
-            transform.rotation = Quaternion.LookRotation(obstacleDir, trackOffset);
+            transform.rotation = Quaternion.LookRotation(obstacleDirection, trackOffset);
         }
 
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
+
             Vector3 centerlinePos = track.Position(distance);
             Gizmos.DrawSphere(centerlinePos, track.Radius);
         }
 
         private void OnValidate()
         {
-            obstacleDir = track.Direction(distance);
+            obstacleDirection = track.Direction(distance);
             trackPosition = track.Position(distance);
-            SetPosition();
+            UpdatePosition();
         }
 
         private void Update()
         {
-            rollAngle += agility * Time.deltaTime;
-            if (rollAngle > 180.0f)
-                rollAngle -= 360.0f;
-            else if (rollAngle < -180.0f)
-                rollAngle = 360.0f + rollAngle;
-
-            SetPosition();
+            UpdateAngle();
+            UpdatePosition();
         }
     }
 }
