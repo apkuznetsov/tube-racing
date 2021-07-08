@@ -11,13 +11,13 @@ namespace TubeRace
         [SerializeField] private float shakeFactor;
         [SerializeField] private AnimationCurve shakeCurve;
 
-        private Camera cam;
+        private Camera thisCamera;
         private Vector3 initialLocalPosition;
 
-        private void Start()
+        private void UpdateViewField()
         {
-            cam = Camera.main;
-            initialLocalPosition = cam.transform.localPosition;
+            float t = bike.NormalizedVelocity();
+            thisCamera.fieldOfView = Mathf.Lerp(minViewField, maxViewField, t);
         }
 
         private void UpdateCameraShake()
@@ -31,13 +31,13 @@ namespace TubeRace
             Vector3 randomVector = Random.insideUnitSphere * shakeFactor;
             randomVector.z = 0;
 
-            cam.transform.localPosition = initialLocalPosition + randomVector * curveValue;
+            thisCamera.transform.localPosition = initialLocalPosition + randomVector * curveValue;
         }
 
-        private void UpdateViewField()
+        private void Start()
         {
-            float t = bike.NormalizedVelocity();
-            cam.fieldOfView = Mathf.Lerp(minViewField, maxViewField, t);
+            thisCamera = Camera.main;
+            initialLocalPosition = thisCamera.transform.localPosition;
         }
 
         private void Update()
