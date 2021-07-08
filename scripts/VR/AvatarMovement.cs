@@ -1,13 +1,13 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-namespace Virtuality
+namespace TubeRace
 {
     public class AvatarMovement : MonoBehaviour
     {
         [SerializeField] private NavigationPanel navigationPanel;
         [SerializeField] private float speed;
 
-        private void Move()
+        private void UpdateMovement()
         {
             Vector3 moveDirection = navigationPanel.MoveDirection();
             transform.position += moveDirection * (Time.deltaTime * speed);
@@ -15,7 +15,7 @@ namespace Virtuality
 
         private void Update()
         {
-            Move();
+            UpdateMovement();
         }
     }
 }
