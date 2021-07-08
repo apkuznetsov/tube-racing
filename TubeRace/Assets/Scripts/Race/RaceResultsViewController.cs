@@ -20,10 +20,10 @@ namespace TubeRace
         {
             gameObject.SetActive(true);
 
-            place.text = "Place: " + stats.Place;
-            topSpeed.text = "Top speed: " + ((int) stats.TopSpeed) + " m/s";
-            totalTime.text = "Time: " + stats.TotalTime.ToString(CultureInfo.CurrentCulture) + " seconds";
-            bestTime.text = "Best lap: " + stats.BestTime.ToString(CultureInfo.CurrentCulture) + " seconds";
+            place.text = "Place: " + stats.RacePlace;
+            topSpeed.text = "Top speed: " + ((int) stats.BestVelocity) + " m/s";
+            totalTime.text = "Time: " + stats.TotalSeconds.ToString(CultureInfo.CurrentCulture) + " seconds";
+            bestTime.text = "Best lap: " + stats.BestSeconds.ToString(CultureInfo.CurrentCulture) + " seconds";
         }
 
         public void OnButtonQuit()

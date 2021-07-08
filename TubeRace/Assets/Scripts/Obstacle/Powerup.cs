@@ -25,7 +25,7 @@ namespace TubeRace
 
         private void UpdateBikes()
         {
-            foreach (GameObject bikeGo in Bike.GameObjects)
+            foreach (GameObject bikeGo in Bike.BikesAsGameObjects)
             {
                 Bike bike = bikeGo.GetComponent<Bike>();
 

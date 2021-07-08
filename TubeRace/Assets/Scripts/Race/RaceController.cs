@@ -119,12 +119,12 @@ namespace TubeRace
                 if (currDistance > totalRaceDistance)
                 {
                     finishedBikes.Add(bike);
-                    bike.Statistics.Place = finishedBikes.Count;
+                    bike.Stats.RacePlace = finishedBikes.Count;
                     bike.OnRaceEnd();
 
                     if (bike.IsPlayerBike)
                     {
-                        raceResultsViewController.Show(bike.Statistics);
+                        raceResultsViewController.Show(bike.Stats);
                     }
                 }
             }
