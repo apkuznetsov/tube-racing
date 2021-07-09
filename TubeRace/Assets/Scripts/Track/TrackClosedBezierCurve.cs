@@ -8,8 +8,8 @@ using UnityEditor;
 namespace TubeRace
 {
 #if UNITY_EDITOR
-    [CustomEditor(typeof(TrackСlosedBezierCurve))]
-    public class TrackСlosedBezierCurveEditor : Editor
+    [CustomEditor(typeof(TrackClosedBezierCurve))]
+    public class TrackClosedBezierCurveEditor : Editor
     {
         public override void OnInspectorGUI()
         {
@@ -17,13 +17,13 @@ namespace TubeRace
 
             if (GUILayout.Button("Generate"))
             {
-                ((TrackСlosedBezierCurve) target).GenerateTrackData();
+                ((TrackClosedBezierCurve) target).GenerateTrackData();
             }
         }
     }
 #endif
 
-    public class TrackСlosedBezierCurve : Track
+    public class TrackClosedBezierCurve : Track
     {
         [SerializeField] private TrackDescription trackDescription;
         [SerializeField] private BezierTrackPoint[] trackPoints;
@@ -34,9 +34,6 @@ namespace TubeRace
         [SerializeField] private Vector3[] trackSampledPoints;
         [SerializeField] private float[] trackSampledSegmentLengths;
         [SerializeField] private float trackSampledLength;
-
-        [SerializeField] private bool debugDrawBezier;
-        [SerializeField] private bool debugDrawSampledPoints;
 
         public override float Length()
         {
@@ -125,6 +122,16 @@ namespace TubeRace
             rotations.Add(b.rotation);
             return rotations.ToArray();
         }
+
+        private void Awake()
+        {
+            if (trackDescription != null)
+                trackDescription.SetLength(trackSampledLength);
+        }
+
+#if UNITY_EDITOR
+        [SerializeField] private bool debugDrawBezier;
+        [SerializeField] private bool debugDrawSampledPoints;
 
         private static Vector3[] GenerateBezierPoints(
             BezierTrackPoint a,
@@ -238,7 +245,7 @@ namespace TubeRace
         {
             Handles.DrawAAPolyLine(trackSampledPoints);
         }
-
+        
         private void OnDrawGizmos()
         {
             if (debugDrawBezier)
@@ -247,11 +254,6 @@ namespace TubeRace
             if (debugDrawSampledPoints)
                 DrawSampledTrackPoints();
         }
-
-        private void Awake()
-        {
-            if (trackDescription != null)
-                trackDescription.SetLength(trackSampledLength);
-        }
+#endif
     }
 }
