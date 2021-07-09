@@ -123,7 +123,7 @@ namespace TubeRace
             return rotations.ToArray();
         }
 
-        private void Awake()
+        private void Start()
         {
             if (trackDescription != null)
                 trackDescription.SetLength(trackSampledLength);
