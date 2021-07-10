@@ -52,8 +52,24 @@ namespace TubeRace
             return actionTimers[(int) e] <= 0;
         }
 
+        private void PressW()
+        {
+            bike.SetForwardThrustAxis(1);
+            bike.SetHorizontalThrustAxis(0);
+        }
+        
         private void CheckInput()
         {
+            if (!bike.IsMovementControlsActive)
+                return;
+        
+            float dt = Time.deltaTime;
+            float ds = bike.Velocity * dt;
+            
+            if (!Physics.Raycast(bike.transform.position, bike.transform.forward, ds))
+            {
+                PressW();
+            }
         }
 
         private void UpdateBot()
