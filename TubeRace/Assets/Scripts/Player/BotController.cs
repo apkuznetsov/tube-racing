@@ -25,6 +25,7 @@ namespace TubeRace
         [SerializeField] private bool isEnabled;
         [SerializeField] private BotBehaviour behaviour;
 
+        [Range(0.0f, 10.0f)] [SerializeField] private float delayTime;
         [Range(0.0f, 10.0f)] [SerializeField] private float pressWTime;
 
         private Bike bike;
@@ -35,7 +36,7 @@ namespace TubeRace
         {
             actionTimers = new float[(int) ActionTimerType.MaxValues];
 
-            SetActionTimer(ActionTimerType.PressW, pressWTime);
+            SetActionTimer(ActionTimerType.Delay, delayTime);
         }
 
         private void SetActionTimer(ActionTimerType e, float time)
@@ -63,19 +64,27 @@ namespace TubeRace
             if (!bike.IsMovementControlsActive)
                 return;
 
-            float dt = Time.deltaTime;
-            float ds = bike.Velocity * dt;
-
-            if (!Physics.Raycast(bike.transform.position, bike.transform.forward, ds))
+            if (IsActionTimerFinished(ActionTimerType.Delay))
             {
-                if (!IsActionTimerFinished(ActionTimerType.PressW))
+                float dt = Time.deltaTime;
+                float ds = bike.Velocity * dt;
+
+                if (!Physics.Raycast(bike.transform.position, bike.transform.forward, ds))
                 {
-                    PressW();
+                    if (!IsActionTimerFinished(ActionTimerType.PressW))
+                    {
+                        PressW();
+                    }
+                    else
+                    {
+                        UnpressW();
+                        SetActionTimer(ActionTimerType.Delay, delayTime);
+                    }
                 }
-                else
-                {
-                    UnpressW();
-                }
+            }
+            else
+            {
+                SetActionTimer(ActionTimerType.PressW, pressWTime);
             }
         }
 
