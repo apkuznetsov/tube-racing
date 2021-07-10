@@ -12,7 +12,8 @@ namespace TubeRace
     {
         Nothing,
 
-        Move,
+        Delay,
+        PressW,
         Rotate,
 
         MaxValues
@@ -24,6 +25,8 @@ namespace TubeRace
         [SerializeField] private bool isEnabled;
         [SerializeField] private BotBehaviour behaviour;
 
+        [Range(0.0f, 10.0f)] [SerializeField] private float pressWTime;
+
         private Bike bike;
 
         private float[] actionTimers;
@@ -31,15 +34,8 @@ namespace TubeRace
         private void InitActionTimers()
         {
             actionTimers = new float[(int) ActionTimerType.MaxValues];
-        }
 
-        private void UpdateActionTimers()
-        {
-            for (int i = 0; i < actionTimers.Length; i++)
-            {
-                if (actionTimers[i] > 0)
-                    actionTimers[i] -= Time.deltaTime;
-            }
+            SetActionTimer(ActionTimerType.PressW, pressWTime);
         }
 
         private void SetActionTimer(ActionTimerType e, float time)
@@ -55,20 +51,31 @@ namespace TubeRace
         private void PressW()
         {
             bike.SetForwardThrustAxis(1);
-            bike.SetHorizontalThrustAxis(0);
         }
-        
+
+        private void UnpressW()
+        {
+            bike.SetForwardThrustAxis(0);
+        }
+
         private void CheckInput()
         {
             if (!bike.IsMovementControlsActive)
                 return;
-        
+
             float dt = Time.deltaTime;
             float ds = bike.Velocity * dt;
-            
+
             if (!Physics.Raycast(bike.transform.position, bike.transform.forward, ds))
             {
-                PressW();
+                if (!IsActionTimerFinished(ActionTimerType.PressW))
+                {
+                    PressW();
+                }
+                else
+                {
+                    UnpressW();
+                }
             }
         }
 
@@ -85,6 +92,15 @@ namespace TubeRace
                 case BotBehaviour.Move:
                     CheckInput();
                     break;
+            }
+        }
+
+        private void UpdateActionTimers()
+        {
+            for (int i = 0; i < actionTimers.Length; i++)
+            {
+                if (actionTimers[i] > 0)
+                    actionTimers[i] -= Time.deltaTime;
             }
         }
 
