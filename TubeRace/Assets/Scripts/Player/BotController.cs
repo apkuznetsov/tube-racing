@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace TubeRace
@@ -5,15 +6,15 @@ namespace TubeRace
     public enum BotBehaviour
     {
         Nothing,
-        Move
+        Behave
     }
 
-    public enum ActionTimerType
+    public enum TimerType
     {
         Nothing,
 
         Delay,
-        PressW,
+        MoveOn,
         Rotate,
 
         MaxValues
@@ -26,66 +27,74 @@ namespace TubeRace
         [SerializeField] private BotBehaviour behaviour;
 
         [Range(0.0f, 10.0f)] [SerializeField] private float delayTime;
-        [Range(0.0f, 10.0f)] [SerializeField] private float pressWTime;
+        [Range(0.0f, 10.0f)] [SerializeField] private float moveForwardTime;
 
         private Bike bike;
+        private Transform bikeTransform;
 
-        private float[] actionTimers;
+        private float[] timers;
 
-        private void InitActionTimers()
+        private void InitTimers()
         {
-            actionTimers = new float[(int) ActionTimerType.MaxValues];
+            timers = new float[(int) TimerType.MaxValues];
 
-            SetActionTimer(ActionTimerType.Delay, delayTime);
+            SetTimer(TimerType.Delay, delayTime);
         }
 
-        private void SetActionTimer(ActionTimerType e, float time)
+        private void SetTimer(TimerType e, float time)
         {
-            actionTimers[(int) e] = time;
+            timers[(int) e] = time;
         }
 
-        private bool IsActionTimerFinished(ActionTimerType e)
+        private bool IsTimerFinished(TimerType e)
         {
-            return actionTimers[(int) e] <= 0;
+            return timers[(int) e] <= 0;
         }
 
-        private void PressW()
+        private void MoveOn()
         {
             bike.SetForwardThrustAxis(1);
         }
 
-        private void UnpressW()
+        private void Stall()
         {
             bike.SetForwardThrustAxis(0);
         }
 
-        private void CheckInput()
+        private void MoveOnOrStall()
+        {
+            if (!IsTimerFinished(TimerType.MoveOn))
+            {
+                MoveOn();
+            }
+            else
+            {
+                Stall();
+                SetTimer(TimerType.Delay, delayTime);
+            }
+        }
+
+        private void Move()
+        {
+            float dt = Time.deltaTime;
+            float ds = bike.Velocity * dt;
+            bool isCollision = Physics.Raycast(bikeTransform.position, bikeTransform.forward, ds);
+
+            if (!isCollision)
+            {
+                MoveOnOrStall();
+            }
+        }
+
+        private void Behave()
         {
             if (!bike.IsMovementControlsActive)
                 return;
 
-            if (IsActionTimerFinished(ActionTimerType.Delay))
-            {
-                float dt = Time.deltaTime;
-                float ds = bike.Velocity * dt;
-
-                if (!Physics.Raycast(bike.transform.position, bike.transform.forward, ds))
-                {
-                    if (!IsActionTimerFinished(ActionTimerType.PressW))
-                    {
-                        PressW();
-                    }
-                    else
-                    {
-                        UnpressW();
-                        SetActionTimer(ActionTimerType.Delay, delayTime);
-                    }
-                }
-            }
+            if (IsTimerFinished(TimerType.Delay))
+                Move();
             else
-            {
-                SetActionTimer(ActionTimerType.PressW, pressWTime);
-            }
+                SetTimer(TimerType.MoveOn, moveForwardTime);
         }
 
         private void UpdateBot()
@@ -98,31 +107,36 @@ namespace TubeRace
                 case BotBehaviour.Nothing:
                     break;
 
-                case BotBehaviour.Move:
-                    CheckInput();
+                case BotBehaviour.Behave:
+                    Behave();
                     break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
-        private void UpdateActionTimers()
+        private void UpdateTimers()
         {
-            for (int i = 0; i < actionTimers.Length; i++)
+            for (int i = 0; i < timers.Length; i++)
             {
-                if (actionTimers[i] > 0)
-                    actionTimers[i] -= Time.deltaTime;
+                if (timers[i] > 0)
+                    timers[i] -= Time.deltaTime;
             }
         }
-
+        
         private void Start()
         {
             bike = GetComponent<Bike>();
-            InitActionTimers();
+            bikeTransform = bike.transform;
+
+            InitTimers();
         }
 
         private void Update()
         {
             UpdateBot();
-            UpdateActionTimers();
+            UpdateTimers();
         }
     }
 }
