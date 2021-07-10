@@ -51,27 +51,37 @@ namespace TubeRace
             return timers[(int) e] <= 0;
         }
 
-        private void MoveOn()
+        private void MoveForward()
         {
             bike.SetForwardThrustAxis(1);
         }
 
-        private void Stall()
+        private void StallForward()
         {
             bike.SetForwardThrustAxis(0);
         }
 
-        private void MoveOnOrStall()
+        private void MoveForwardOrStall()
         {
             if (!IsTimerFinished(TimerType.MoveOn))
             {
-                MoveOn();
+                MoveForward();
             }
             else
             {
-                Stall();
+                StallForward();
                 SetTimer(TimerType.Delay, delayTime);
             }
+        }
+
+        private void MoveHorizontal()
+        {
+            bike.SetHorizontalThrustAxis(1);
+        }
+
+        private void StallHorizontal()
+        {
+            bike.SetHorizontalThrustAxis(0);
         }
 
         private void Move()
@@ -82,7 +92,12 @@ namespace TubeRace
 
             if (!isCollision)
             {
-                MoveOnOrStall();
+                StallHorizontal();
+                MoveForwardOrStall();
+            }
+            else
+            {
+                MoveHorizontal();
             }
         }
 
@@ -124,7 +139,7 @@ namespace TubeRace
                     timers[i] -= Time.deltaTime;
             }
         }
-        
+
         private void Start()
         {
             bike = GetComponent<Bike>();
