@@ -33,9 +33,6 @@ namespace TubeRace
         [SerializeField] private float[] trackSampledSegmentLengths;
         [SerializeField] private float trackSampledLength;
 
-        [SerializeField] private bool debugDrawCircle;
-        [SerializeField] private bool debugDrawSampledPoints;
-
         public override float Length()
         {
             return trackSampledLength;
@@ -99,6 +96,10 @@ namespace TubeRace
 
             return Quaternion.identity;
         }
+
+#if UNITY_EDITOR
+        [SerializeField] private bool debugDrawCircle;
+        [SerializeField] private bool debugDrawSampledPoints;
 
         private static Quaternion GenerateRotation(Vector3 a, Vector3 b, float t)
         {
@@ -181,5 +182,6 @@ namespace TubeRace
             if (debugDrawSampledPoints)
                 DrawSampledTrackPoints();
         }
+#endif
     }
 }

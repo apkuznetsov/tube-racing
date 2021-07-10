@@ -14,11 +14,12 @@ namespace TubeRace
         [SerializeField] private Sprite preview;
         public Sprite Preview => preview;
 
-        public float Length { get; private set; }
+        [SerializeField] private float length;
+        public float Length => length;
 
-        public void SetLength(float length)
+        public void SetLength(float newLength)
         {
-            Length = length;
+            length = newLength;
         }
     }
 }

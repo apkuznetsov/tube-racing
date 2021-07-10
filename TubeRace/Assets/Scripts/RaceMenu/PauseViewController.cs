@@ -5,7 +5,7 @@ namespace TubeRace
 {
     public class PauseViewController : MonoBehaviour
     {
-        public const string MainMenuScene = "MainMenuScene";
+        public const string MainMenuScene = "scene_main_menu";
 
         [SerializeField] private RaceController raceController;
         [SerializeField] private RectTransform content;
