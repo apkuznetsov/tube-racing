@@ -13,7 +13,7 @@ namespace TubeRace
     {
         Nothing,
 
-        Delay,
+        ReactionDelay,
         MoveOn,
         Rotate,
 
@@ -26,7 +26,9 @@ namespace TubeRace
         [SerializeField] private bool isEnabled;
         [SerializeField] private BotBehaviour behaviour;
 
-        [Range(0.0f, 10.0f)] [SerializeField] private float delayTime;
+        [Range(1, 100)] [SerializeField] private int predictionTimeSteps;
+
+        [Range(0.0f, 10.0f)] [SerializeField] private float reactionDelayTime;
         [Range(0.0f, 10.0f)] [SerializeField] private float moveForwardTime;
 
         private Bike bike;
@@ -52,7 +54,7 @@ namespace TubeRace
         {
             timers = new float[(int) TimerType.MaxValues];
 
-            SetTimer(TimerType.Delay, delayTime);
+            SetTimer(TimerType.ReactionDelay, reactionDelayTime);
         }
 
         private void SetTimer(TimerType e, float time)
@@ -84,7 +86,7 @@ namespace TubeRace
             else
             {
                 StallForward();
-                SetTimer(TimerType.Delay, delayTime);
+                SetTimer(TimerType.ReactionDelay, reactionDelayTime);
             }
         }
 
@@ -100,7 +102,7 @@ namespace TubeRace
 
         private void Move()
         {
-            float dt = Time.deltaTime;
+            float dt = Time.deltaTime * predictionTimeSteps;
             float ds = bike.Velocity * dt;
             bool isCollision = Physics.Raycast(bikeTransform.position, bikeTransform.forward, ds);
 
@@ -111,6 +113,7 @@ namespace TubeRace
             }
             else
             {
+                MoveForward();
                 MoveHorizontal();
             }
         }
@@ -120,7 +123,7 @@ namespace TubeRace
             if (!bike.IsMovementControlsActive)
                 return;
 
-            if (IsTimerFinished(TimerType.Delay))
+            if (IsTimerFinished(TimerType.ReactionDelay))
                 Move();
             else
                 SetTimer(TimerType.MoveOn, moveForwardTime);
@@ -148,10 +151,8 @@ namespace TubeRace
         private void UpdateTimers()
         {
             for (int i = 0; i < timers.Length; i++)
-            {
                 if (timers[i] > 0)
                     timers[i] -= Time.deltaTime;
-            }
         }
     }
 }
