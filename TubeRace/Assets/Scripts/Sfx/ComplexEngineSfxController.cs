@@ -23,14 +23,14 @@ namespace TubeRace
 
         private void Update()
         {
-            UpdateSuperSonicSound();
+            // UpdateSuperSonicSound();
             UpdateEngineSound();
         }
 
         private void SetSuperSonic(bool enable)
         {
-            if (!IsSuperSonic && enable)
-                sfxSonicBoom.Play();
+            // if (!IsSuperSonic && enable)
+            //     sfxSonicBoom.Play();
 
             IsSuperSonic = enable;
         }
