@@ -17,38 +17,22 @@ namespace TubeRace
         [SerializeField] private Track track;
 
         [SerializeField] private Bike[] bikes;
+        private List<Bike> activeBikes;
+        private List<Bike> finishedBikes;
+        public IEnumerable<Bike> Bikes => bikes;
 
         [SerializeField] private RaceMode raceMode;
         [SerializeField] private RaceCondition[] conditions;
 
         [SerializeField] private UnityEvent eventRaceStart;
         [SerializeField] private UnityEvent eventRaceFinished;
+        public bool IsRaceActive { get; private set; }
 
         [SerializeField] private int maxLaps;
+        public int MaxLaps => maxLaps;
 
         [SerializeField] private int countdownTimer;
-        private List<Bike> activeBikes;
-        private List<Bike> finishedBikes;
-        public IEnumerable<Bike> Bikes => bikes;
-        public bool IsRaceActive { get; private set; }
-        public int MaxLaps => maxLaps;
         public float CountTimer { get; private set; }
-
-
-        private void Start()
-        {
-            StartRace();
-        }
-
-        private void Update()
-        {
-            if (!IsRaceActive)
-                return;
-
-            UpdatePositions();
-            UpdatePrestart();
-            UpdateConditions();
-        }
 
         private void StartRace()
         {
@@ -106,8 +90,10 @@ namespace TubeRace
                 CountTimer -= Time.deltaTime;
 
                 if (CountTimer <= 0)
+                {
                     foreach (Bike bike in bikes)
                         bike.IsMovementControlsActive = true;
+                }
             }
         }
 
@@ -117,10 +103,28 @@ namespace TubeRace
                 return;
 
             foreach (RaceCondition condition in conditions)
+            {
                 if (!condition.IsTriggered)
                     return;
+            }
 
             EndRace();
+        }
+
+
+        private void Start()
+        {
+            StartRace();
+        }
+
+        private void Update()
+        {
+            if (!IsRaceActive)
+                return;
+
+            UpdatePositions();
+            UpdatePrestart();
+            UpdateConditions();
         }
     }
 }

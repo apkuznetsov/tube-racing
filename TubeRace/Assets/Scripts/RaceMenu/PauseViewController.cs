@@ -10,6 +10,17 @@ namespace TubeRace
         [SerializeField] private RaceController raceController;
         [SerializeField] private RectTransform content;
 
+        public void OnButtonContinue()
+        {
+            Time.timeScale = 1;
+            content.gameObject.SetActive(false);
+        }
+
+        public void OnButtonEndRace()
+        {
+            SceneManager.LoadScene(MainMenuScene);
+        }
+
         private void Start()
         {
             content.gameObject.SetActive(false);
@@ -28,17 +39,6 @@ namespace TubeRace
                     Time.timeScale = canUpdate ? 1 : 0;
                 }
             }
-        }
-
-        public void OnButtonContinue()
-        {
-            Time.timeScale = 1;
-            content.gameObject.SetActive(false);
-        }
-
-        public void OnButtonEndRace()
-        {
-            SceneManager.LoadScene(MainMenuScene);
         }
     }
 }

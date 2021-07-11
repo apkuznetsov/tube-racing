@@ -35,12 +35,6 @@ namespace TubeRace
         [SerializeField] private float[] trackSampledSegmentLengths;
         [SerializeField] private float trackSampledLength;
 
-        private void Start()
-        {
-            if (trackDescription != null)
-                trackDescription.SetLength(trackSampledLength);
-        }
-
         public override float Length()
         {
             return trackSampledLength;
@@ -127,6 +121,12 @@ namespace TubeRace
 
             rotations.Add(b.rotation);
             return rotations.ToArray();
+        }
+
+        private void Start()
+        {
+            if (trackDescription != null)
+                trackDescription.SetLength(trackSampledLength);
         }
 
 #if UNITY_EDITOR
@@ -245,7 +245,7 @@ namespace TubeRace
         {
             Handles.DrawAAPolyLine(trackSampledPoints);
         }
-
+        
         private void OnDrawGizmos()
         {
             if (debugDrawBezier)

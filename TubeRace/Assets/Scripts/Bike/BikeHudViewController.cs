@@ -18,13 +18,13 @@ namespace TubeRace
 
         private void Update()
         {
-            labelVelocity.text = "Speed: " + (int) bike.Velocity + " m/s";
-            labelDistance.text = "Distance: " + (int) bike.Distance + " m";
+            labelVelocity.text = "Speed: " + (int) (bike.Velocity) + " m/s";
+            labelDistance.text = "Distance: " + (int) (bike.Distance) + " m";
 
             int laps = (int) (bike.Distance / bike.Track.Length()) + 1;
             labelLapNum.text = "Lap: " + laps;
 
-            labelRollAngle.text = "Angle: " + (int) bike.Angle + " deg";
+            labelRollAngle.text = "Angle: " + (int) (bike.Angle) + " deg";
 
             labelHeat.text = "Heat: " + (int) (bike.NormalizedHeat * 100.0f);
             labelFuel.text = "Fuel: " + (int) bike.Fuel;

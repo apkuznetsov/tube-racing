@@ -8,16 +8,6 @@ namespace TubeRace
         [SerializeField] private float distance;
         [SerializeField] private float angle;
 
-        private void Update()
-        {
-            UpdateBikes();
-        }
-
-        private void OnValidate()
-        {
-            SetPosition();
-        }
-
         protected abstract void OnPicked(Bike bike);
 
         private void SetPosition()
@@ -47,6 +37,16 @@ namespace TubeRace
                     OnPicked(bike);
                 }
             }
+        }
+
+        private void OnValidate()
+        {
+            SetPosition();
+        }
+
+        private void Update()
+        {
+            UpdateBikes();
         }
     }
 }

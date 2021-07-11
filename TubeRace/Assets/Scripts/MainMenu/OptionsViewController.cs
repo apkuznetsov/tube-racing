@@ -9,19 +9,9 @@ namespace TubeRace
 
         [SerializeField] private bool isFullScreen = true;
         [SerializeField] private Dropdown dropdown;
-        private readonly int[] height = {1080, 768, 900};
 
         private readonly int[] width = {1920, 1366, 1440};
-
-        private void Awake()
-        {
-            gameObject.SetActive(false);
-
-            InitDropdownOptions();
-            dropdown.value = 0;
-
-            SetScreenResolution();
-        }
+        private readonly int[] height = {1080, 768, 900};
 
         private void InitDropdownOptions()
         {
@@ -48,6 +38,16 @@ namespace TubeRace
 
             gameObject.SetActive(false);
             mainMenuViewController.gameObject.SetActive(true);
+        }
+
+        private void Awake()
+        {
+            gameObject.SetActive(false);
+
+            InitDropdownOptions();
+            dropdown.value = 0;
+
+            SetScreenResolution();
         }
     }
 }

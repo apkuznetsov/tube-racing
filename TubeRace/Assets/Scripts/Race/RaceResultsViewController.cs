@@ -12,11 +12,6 @@ namespace TubeRace
         [SerializeField] private Text totalSeconds;
         [SerializeField] private Text bestSeconds;
 
-        private void Awake()
-        {
-            gameObject.SetActive(false);
-        }
-
         public void Show(Bike.BikeStatistics stats)
         {
             gameObject.SetActive(true);
@@ -30,6 +25,11 @@ namespace TubeRace
         public void OnButtonQuit()
         {
             SceneManager.LoadScene(PauseViewController.MainMenuScene);
+        }
+
+        private void Awake()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

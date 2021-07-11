@@ -12,31 +12,10 @@ namespace TubeRace
         [Range(0.0f, 100.0f)] public float angularThrust;
 
         private Vector3 obstacleDirection;
+        private Vector3 trackPosition;
 
         private Quaternion quater;
         private Vector3 trackOffset;
-        private Vector3 trackPosition;
-
-        private void Update()
-        {
-            UpdateAngle();
-            UpdatePosition();
-        }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-
-            Vector3 centerlinePos = track.Position(distance);
-            Gizmos.DrawSphere(centerlinePos, track.Radius);
-        }
-
-        private void OnValidate()
-        {
-            obstacleDirection = track.Direction(distance);
-            trackPosition = track.Position(distance);
-            UpdatePosition();
-        }
 
         private void UpdateAngle()
         {
@@ -54,6 +33,27 @@ namespace TubeRace
 
             transform.position = trackPosition - trackOffset;
             transform.rotation = Quaternion.LookRotation(obstacleDirection, trackOffset);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+
+            Vector3 centerlinePos = track.Position(distance);
+            Gizmos.DrawSphere(centerlinePos, track.Radius);
+        }
+
+        private void OnValidate()
+        {
+            obstacleDirection = track.Direction(distance);
+            trackPosition = track.Position(distance);
+            UpdatePosition();
+        }
+
+        private void Update()
+        {
+            UpdateAngle();
+            UpdatePosition();
         }
     }
 }

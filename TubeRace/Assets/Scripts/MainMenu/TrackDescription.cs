@@ -6,15 +6,15 @@ namespace TubeRace
     public class TrackDescription : ScriptableObject
     {
         [SerializeField] private string title;
+        public string Title => title;
 
         [SerializeField] private string sceneName;
+        public string SceneName => sceneName;
 
         [SerializeField] private Sprite preview;
+        public Sprite Preview => preview;
 
         [SerializeField] private float length;
-        public string Title => title;
-        public string SceneName => sceneName;
-        public Sprite Preview => preview;
         public float Length => length;
 
         public void SetLength(float newLength)

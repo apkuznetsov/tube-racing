@@ -67,5 +67,11 @@ namespace TubeRace
 
             sfxLoud.volume = curveLoud.Evaluate(t);
         }
+
+        private void Update()
+        {
+            UpdateSuperSonicSound();
+            UpdateEngineSound();
+        }
     }
 }
