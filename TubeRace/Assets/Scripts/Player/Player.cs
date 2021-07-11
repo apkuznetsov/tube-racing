@@ -2,9 +2,6 @@ using UnityEngine;
 
 namespace TubeRace
 {
-    /// <summary>
-    /// Игрок гонки, бот, человек
-    /// </summary>
     public class Player : MonoBehaviour
     {
         [SerializeField] private NewInput newInput;
