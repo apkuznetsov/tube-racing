@@ -135,9 +135,9 @@ namespace TubeRace
 
         public class BikeStatistics
         {
-            public int RacePlace;
-            public float BestVelocity;
             public float BestSeconds;
+            public float BestVelocity;
+            public int RacePlace;
             public float TotalSeconds;
         }
 

@@ -6,6 +6,14 @@ namespace TubeRace
     {
         private HandController handController;
 
+        private void Update()
+        {
+            if (handController == null)
+                return;
+
+            UpdateMovement(handController);
+        }
+
         public void StartMovement(HandController hand)
         {
             handController = hand;
@@ -17,13 +25,5 @@ namespace TubeRace
         }
 
         protected abstract void UpdateMovement(HandController hand);
-
-        private void Update()
-        {
-            if (handController == null)
-                return;
-
-            UpdateMovement(handController);
-        }
     }
 }

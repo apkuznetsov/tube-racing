@@ -8,11 +8,17 @@ namespace TubeRace
     public class TrackEntryViewController : MonoBehaviour
     {
         [SerializeField] private TrackDescription trackDescription;
-        private TrackDescription activeDescription;
 
         [SerializeField] private Text labelTitle;
         [SerializeField] private Text labelLength;
         [SerializeField] private GameObject labelImage;
+        private TrackDescription activeDescription;
+
+        private void Start()
+        {
+            if (trackDescription != null)
+                SetViewFields(trackDescription);
+        }
 
         private void SetViewFields(TrackDescription description)
         {
@@ -26,12 +32,6 @@ namespace TubeRace
         public void OnButtonStartLevel()
         {
             SceneManager.LoadScene(activeDescription.SceneName);
-        }
-
-        private void Start()
-        {
-            if (trackDescription != null)
-                SetViewFields(trackDescription);
         }
     }
 }

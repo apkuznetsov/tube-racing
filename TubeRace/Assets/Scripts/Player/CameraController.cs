@@ -10,9 +10,21 @@ namespace TubeRace
         [SerializeField] private float maxViewField = 85;
         [SerializeField] private float shakeFactor;
         [SerializeField] private AnimationCurve shakeCurve;
+        private Vector3 initialLocalPosition;
 
         private Camera thisCamera;
-        private Vector3 initialLocalPosition;
+
+        private void Start()
+        {
+            thisCamera = Camera.main;
+            initialLocalPosition = thisCamera.transform.localPosition;
+        }
+
+        private void Update()
+        {
+            UpdateViewField();
+            UpdateCameraShake();
+        }
 
         private void UpdateViewField()
         {
@@ -32,18 +44,6 @@ namespace TubeRace
             randomVector.z = 0;
 
             thisCamera.transform.localPosition = initialLocalPosition + randomVector * curveValue;
-        }
-
-        private void Start()
-        {
-            thisCamera = Camera.main;
-            initialLocalPosition = thisCamera.transform.localPosition;
-        }
-
-        private void Update()
-        {
-            UpdateViewField();
-            UpdateCameraShake();
         }
     }
 }

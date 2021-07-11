@@ -12,27 +12,15 @@ namespace TubeRace
         [Range(0.0f, 100.0f)] public float angularThrust;
 
         private Vector3 obstacleDirection;
-        private Vector3 trackPosition;
 
         private Quaternion quater;
         private Vector3 trackOffset;
+        private Vector3 trackPosition;
 
-        private void UpdateAngle()
+        private void Update()
         {
-            angle += angularThrust * Time.deltaTime;
-            if (angle > 180.0f)
-                angle -= 360.0f;
-            else if (angle < -180.0f)
-                angle = 360.0f + angle;
-        }
-
-        private void UpdatePosition()
-        {
-            quater = Quaternion.AngleAxis(angle, Vector3.forward);
-            trackOffset = quater * (Vector3.up * (radiusModifier * track.Radius));
-
-            transform.position = trackPosition - trackOffset;
-            transform.rotation = Quaternion.LookRotation(obstacleDirection, trackOffset);
+            UpdateAngle();
+            UpdatePosition();
         }
 
         private void OnDrawGizmos()
@@ -50,10 +38,22 @@ namespace TubeRace
             UpdatePosition();
         }
 
-        private void Update()
+        private void UpdateAngle()
         {
-            UpdateAngle();
-            UpdatePosition();
+            angle += angularThrust * Time.deltaTime;
+            if (angle > 180.0f)
+                angle -= 360.0f;
+            else if (angle < -180.0f)
+                angle = 360.0f + angle;
+        }
+
+        private void UpdatePosition()
+        {
+            quater = Quaternion.AngleAxis(angle, Vector3.forward);
+            trackOffset = quater * (Vector3.up * (radiusModifier * track.Radius));
+
+            transform.position = trackPosition - trackOffset;
+            transform.rotation = Quaternion.LookRotation(obstacleDirection, trackOffset);
         }
     }
 }

@@ -9,6 +9,12 @@ namespace TubeRace
 
         [SerializeField] private Transform end;
 
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(start.position, end.position);
+        }
+
         public override float Length()
         {
             return (end.position - start.position).magnitude;
@@ -27,12 +33,6 @@ namespace TubeRace
             Mathf.Clamp(distance, 0, Length());
 
             return (end.position - start.position).normalized;
-        }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(start.position, end.position);
         }
     }
 }

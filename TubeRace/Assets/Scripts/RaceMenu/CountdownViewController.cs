@@ -8,6 +8,11 @@ namespace TubeRace
         [SerializeField] private RaceController raceController;
         [SerializeField] private Text label;
 
+        private void Update()
+        {
+            UpdateCountdown();
+        }
+
         private void DisableCountdown()
         {
             label.text = "";
@@ -27,11 +32,6 @@ namespace TubeRace
             {
                 label.text = ((int) currSeconds).ToString();
             }
-        }
-
-        private void Update()
-        {
-            UpdateCountdown();
         }
     }
 }

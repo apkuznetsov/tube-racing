@@ -2,14 +2,16 @@ using UnityEngine;
 
 namespace TubeRace
 {
-    /// <summary>
-    /// Игрок гонки, бот, человек
-    /// </summary>
     public class Player : MonoBehaviour
     {
         [SerializeField] private NewInput newInput;
 
         [SerializeField] private Bike activeBike;
+
+        private void Update()
+        {
+            CheckInput();
+        }
 
         private void CheckInput()
         {
@@ -22,11 +24,6 @@ namespace TubeRace
             activeBike.SetHorizontalThrustAxis(direction.x);
 
             activeBike.EnableAfterburner = newInput.EnableAfterburner();
-        }
-
-        private void Update()
-        {
-            CheckInput();
         }
     }
 }

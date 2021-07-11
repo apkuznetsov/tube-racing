@@ -34,6 +34,20 @@ namespace TubeRace
 
         private float[] timers;
 
+        private void Start()
+        {
+            bike = GetComponent<Bike>();
+            bikeTransform = bike.transform;
+
+            InitTimers();
+        }
+
+        private void Update()
+        {
+            UpdateBot();
+            UpdateTimers();
+        }
+
         private void InitTimers()
         {
             timers = new float[(int) TimerType.MaxValues];
@@ -138,20 +152,6 @@ namespace TubeRace
                 if (timers[i] > 0)
                     timers[i] -= Time.deltaTime;
             }
-        }
-
-        private void Start()
-        {
-            bike = GetComponent<Bike>();
-            bikeTransform = bike.transform;
-
-            InitTimers();
-        }
-
-        private void Update()
-        {
-            UpdateBot();
-            UpdateTimers();
         }
     }
 }

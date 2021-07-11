@@ -21,6 +21,12 @@ namespace TubeRace
         [SerializeField] private AnimationCurve sonicCurve;
         private bool IsSuperSonic { get; set; }
 
+        private void Update()
+        {
+            UpdateSuperSonicSound();
+            UpdateEngineSound();
+        }
+
         private void SetSuperSonic(bool enable)
         {
             if (!IsSuperSonic && enable)
@@ -60,12 +66,6 @@ namespace TubeRace
             sfxHigh.pitch = 1.0f + PitchFactor * t;
 
             sfxLoud.volume = curveLoud.Evaluate(t);
-        }
-
-        private void Update()
-        {
-            UpdateSuperSonicSound();
-            UpdateEngineSound();
         }
     }
 }
