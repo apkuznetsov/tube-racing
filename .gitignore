@@ -70,8 +70,10 @@ crashlytics-build.properties
 
 *.fbx
 
-TubeRace/Assets/ThirdParty/
-TubeRace/Assets/Samples/
-TubeRace/Assets/XR/
+.idea/
+
+Assets/ThirdParty/
+Assets/Samples/
+Assets/XR/
 
 about/hw10.mp4
